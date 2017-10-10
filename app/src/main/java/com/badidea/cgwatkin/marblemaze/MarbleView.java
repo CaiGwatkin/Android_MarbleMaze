@@ -8,10 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class MarbleView extends View {
-    /**
-     * The number of marbles to be generated.
-     */
-    static int NUM_BUBBLES = 1;
+    static int RADIUS = 50;
 
     /**
      * The paint objects to colour etc. the marble.
@@ -45,7 +42,7 @@ public class MarbleView extends View {
         super(context, attrs);
         mGX = 0;
         mGY = 9.8f;
-        mMarble = new Marble(0, 0, 0, 0, 0);
+        mMarble = new Marble(RADIUS * 2, RADIUS * 2, 0, 0, RADIUS);
     }
 
     /**
@@ -56,11 +53,9 @@ public class MarbleView extends View {
     @Override
     protected void onDraw(Canvas c) {
         super.onDraw(c);
-        mMarble.draw(c, mPaint);
-    }
-
-    public void makeMarble() {
-        mMarble = new Marble(getWidth() / 2, getHeight() / 2, 0, 0, 100);
+        if (mMarble != null) {
+            mMarble.draw(c, mPaint);
+        }
     }
 
     /**
@@ -69,7 +64,9 @@ public class MarbleView extends View {
      * @param dT Difference in time.
      */
     public void update(float dT) {
-        mMarble.move(dT, mGX, mGY, getWidth(), getHeight());
+        if (mMarble != null) {
+            mMarble.move(dT, mGX, mGY, getWidth(), getHeight());
+        }
     }
 
     /**

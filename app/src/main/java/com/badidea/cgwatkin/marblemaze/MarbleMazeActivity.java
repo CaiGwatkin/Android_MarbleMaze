@@ -60,7 +60,7 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
     /**
      * Set content view to marble puzzle. Find marble view.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState Saved instance state.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +69,6 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_marble_puzzle);
         mMarbleView = (MarbleView) findViewById(R.id.marble_view);
-        mMarbleView.post(new Runnable() {
-            @Override
-            public void run() {
-                mMarbleView.makeMarble();
-            }
-        });
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
