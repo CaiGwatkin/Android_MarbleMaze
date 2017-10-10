@@ -1,4 +1,4 @@
-package com.badidea.cgwatkin.marblepuzzle;
+package com.badidea.cgwatkin.marblemaze;
 
 import org.junit.Test;
 

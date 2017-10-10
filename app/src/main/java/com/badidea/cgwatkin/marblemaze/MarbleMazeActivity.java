@@ -1,4 +1,4 @@
-package com.badidea.cgwatkin.marblepuzzle;
+package com.badidea.cgwatkin.marblemaze;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-public class MarblePuzzle extends Activity implements SensorEventListener {
+public class MarbleMazeActivity extends Activity implements SensorEventListener {
     /**
      * The refresh rate/delay values.
      */

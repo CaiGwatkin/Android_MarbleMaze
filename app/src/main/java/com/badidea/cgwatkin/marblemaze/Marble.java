@@ -1,4 +1,4 @@
-package com.badidea.cgwatkin.marblepuzzle;
+package com.badidea.cgwatkin.marblemaze;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

@@ -1,4 +1,4 @@
-package com.badidea.cgwatkin.marblepuzzle;
+package com.badidea.cgwatkin.marblemaze;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

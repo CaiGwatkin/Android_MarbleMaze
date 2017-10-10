@@ -1,4 +1,4 @@
-package com.badidea.cgwatkin.marblepuzzle;
+package com.badidea.cgwatkin.marblemaze;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -176,7 +176,7 @@ public class WelcomeActivity extends Activity {
      * Start marble puzzle activity through intent.
      */
     private void startAppIntent() {
-        Intent intent = new Intent(this, MarblePuzzle.class);
+        Intent intent = new Intent(this, MarbleMazeActivity.class);
         startActivity(intent);
     }
 }
