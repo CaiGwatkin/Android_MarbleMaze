@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bubble Puzzle</string>
+
+    <string name="welcome1">FEEL\nTHE MARBLE</string>
+    <string name="welcome2">YOU ARE\nTHE MARBLE</string>
+    <string name="welcome3">MARBLE\nPUZZLE</string>
+</resources>
