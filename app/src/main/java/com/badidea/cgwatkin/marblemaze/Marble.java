@@ -85,20 +85,31 @@ public class Marble {
                 if (wo.collision(x, y, mR)) {
                     switch (wo.side(x, y, mR)) {
                         case LEFT:
-                            mVX = -mVX * k;
+                            reverseVX();
+                            break;
+                        case TOP_LEFT:
+                            bounce();
                             break;
                         case TOP:
-                            mVY = -mVY * k;
+                            reverseVY();
+                            break;
+                        case TOP_RIGHT:
+                            bounce();
                             break;
                         case RIGHT:
-                            mVX = -mVX * k;
+                            reverseVX();
+                            break;
+                        case BOTTOM_RIGHT:
+                            bounce();
                             break;
                         case BOTTOM:
-                            mVY = -mVY * k;
+                            reverseVY();
+                            break;
+                        case BOTTOM_LEFT:
+                            bounce();
                             break;
                         default:
-                            mVX = -mVX * k;
-                            mVY = -mVY * k;
+                            bounce();
                             break;
                     }
                     x = linearMovement(mX, mVX, dT);
@@ -111,16 +122,52 @@ public class Marble {
         mY = y;
     }
 
-    private float linearMovement(float point, float v, float dT) {
-        return point + (v * dT * 100);
+    private void reverseVX() {
+        mVX = -mVX * k;
     }
 
+    private void reverseVY() {
+        mVY = -mVY * k;
+    }
+
+    private void bounce() {
+        mVX = -mVX * k;
+        mVY = -mVY * k;
+    }
+
+    /**
+     * Calculate next linear position.
+     *
+     * @param coordinate The coordinate.
+     * @param v The velocity.
+     * @param dT The time difference.
+     * @return The new coordinate.
+     */
+    private float linearMovement(float coordinate, float v, float dT) {
+        return coordinate + (v * dT * 100);
+    }
+
+    /**
+     * Calculate the new velocity based on gravity.
+     *
+     * @param v The current velocity.
+     * @param dT The time difference.
+     * @param g The gravity modifier.
+     * @return The new velocity.
+     */
     private float updateVelocity(float v, float dT, float g) {
         return v + (dT * g * 10);
     }
 
-    private boolean boundaryCollision(float point, float boundary) {
-        return point < mR || point > boundary - mR;
+    /**
+     * Calculate if the marble is touching the boundary.
+     *
+     * @param coordinate The coordinate.
+     * @param boundary The boundary value.
+     * @return True if boundary collision occurred.
+     */
+    private boolean boundaryCollision(float coordinate, float boundary) {
+        return coordinate < mR || coordinate > boundary - mR;
     }
 
 //    void move(float x, float y) {

@@ -13,7 +13,7 @@ public class MarbleView extends View {
     /**
      * The radius of the marble to be displayed.
      */
-    static int RADIUS = 50;
+    static int RADIUS = 40;
 
     static int DEFAULT_OBJECT_SIZE = 200;
 

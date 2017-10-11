@@ -9,8 +9,6 @@ class RectObject extends WorldObject {
      * The rectangle object that describes the
      */
     private Rect mRect;
-    
-    private int mW, mH;
 
     /**
      * SquareObject constructor
@@ -41,6 +39,14 @@ class RectObject extends WorldObject {
         c.restore();
     }
 
+    /**
+     * Tests if the marble collides with this object.
+     *
+     * @param x Marble's centre's x coordinate.
+     * @param y Marble's centre's y coordinate.
+     * @param r Marble's radius.
+     * @return True if collision occurred.
+     */
     @Override
     public boolean collision(float x, float y, float r) {
         float distX = Math.abs(x - mX - mW / 2);
@@ -56,26 +62,24 @@ class RectObject extends WorldObject {
         return (dX * dX + dY * dY <= r * r);
     }
 
+    /**
+     * Finds to which side of this object the marble is.
+     *
+     * @param x Marble's centre's x coordinate.
+     * @param y Marble's centre's y coordinate.
+     * @param r Marble's radius.
+     * @return The Side of this object the marble is on.
+     */
     @Override
     public Side side(float x, float y, float r) {
         int maxX = mX + mW;
         int maxY = mY + mH;
         if (x < mX) {
             if (y < mY) {
-                if (mY - y < mX - x) {
-                    return Side.TOP;
-                }
-                else {
-                    return Side.LEFT;
-                }
+                return Side.TOP_LEFT;
             }
             else if (y > maxY) {
-                if (y - maxY < mX - x) {
-                    return Side.BOTTOM;
-                }
-                else {
-                    return Side.LEFT;
-                }
+                return Side.BOTTOM_LEFT;
             }
             else {
                 return Side.LEFT;
@@ -83,20 +87,10 @@ class RectObject extends WorldObject {
         }
         else if (x > maxX) {
             if (y < mY) {
-                if (mY - y < x - maxX) {
-                    return Side.TOP;
-                }
-                else {
-                    return Side.RIGHT;
-                }
+                return Side.TOP_RIGHT;
             }
             else if (y > maxY) {
-                if (y - maxY < x - maxX) {
-                    return Side.BOTTOM;
-                }
-                else {
-                    return Side.RIGHT;
-                }
+                return Side.BOTTOM_RIGHT;
             }
             else {
                 return Side.RIGHT;
