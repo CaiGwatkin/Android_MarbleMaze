@@ -2,7 +2,10 @@ package com.badidea.cgwatkin.marblemaze;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
+
+import java.util.ArrayList;
 
 public class Marble {
     /**
@@ -56,19 +59,52 @@ public class Marble {
      * @param w Width of canvas.
      * @param h Height of canvas.
      */
-    void move(float dT, float gX, float gY, float w, float h) {
-        mX += mVX * dT * 100;
-        if (mX < mR || mX > w - mR) {
-            mX -= mVX * dT * 100;
+    void move(float dT, float gX, float gY, float w, float h, ArrayList<WorldObject> worldObjects) {
+        mVX = updateVelocity(mVX, dT, gX);
+        mVY = updateVelocity(mVY, dT, gY);
+        float x = linearMovement(mX, mVX, dT);
+        float y = linearMovement(mY, mVY, dT);
+        boolean bc = false;
+        if (boundaryCollision(x, w)) {
             mVX = -mVX * k;
+            x = linearMovement(mX, mVX, dT);
+            bc = true;
         }
-        mY += mVY * dT * 100;
-        if (mY < mR || mY > h - mR) {
-            mY -= mVY * dT * 100;
+        if (boundaryCollision(y, h)) {
             mVY = -mVY * k;
+            y = linearMovement(mY, mVY, dT);
+            bc = true;
         }
-        mVX += dT * gX * 10;
-        mVY += dT * gY * 10;
+        if (bc) {
+            mX = x;
+            mY = y;
+            return;
+        }
+        if (!worldObjects.isEmpty()) {
+            for (WorldObject wo: worldObjects) {
+                if (wo.collision(x, y, mR)) {
+                    mVX = -mVX * k;
+                    mVY = -mVY * k;
+                    mX = linearMovement(mX, mVX, dT);
+                    mY = linearMovement(mY, mVY, dT);
+                    return;
+                }
+            }
+        }
+        mX = x;
+        mY = y;
+    }
+
+    private float linearMovement(float point, float v, float dT) {
+        return point + (v * dT * 100);
+    }
+
+    private float updateVelocity(float v, float dT, float g) {
+        return v + (dT * g * 10);
+    }
+
+    private boolean boundaryCollision(float point, float boundary) {
+        return point < mR || point > boundary - mR;
     }
 
 //    void move(float x, float y) {

@@ -9,6 +9,8 @@ class RectObject extends WorldObject {
      * The rectangle object that describes the
      */
     private Rect mRect;
+    
+    private int mW, mH;
 
     /**
      * SquareObject constructor
@@ -21,6 +23,8 @@ class RectObject extends WorldObject {
     RectObject(int x, int y, int w, int h) {
         super(x, y);
         mRect = new Rect(0, 0, w, h);
+        mW = w;
+        mH = h;
     }
 
     /**
@@ -36,4 +40,23 @@ class RectObject extends WorldObject {
         c.drawRect(mRect, p);
         c.restore();
     }
+
+    @Override
+    public boolean collision(float x, float y, float r) {
+        float distX = Math.abs(x - mX - mW / 2);
+        float distY = Math.abs(y - mY - mH / 2);
+        if ((distX > (mW / 2 + r)) || (distY > (mH / 2 + r))) {
+            return false;
+        }
+        if ((distX <= (mW/2)) || (distY <= (mH/2))) {
+            return true;
+        }
+        float dX = distX - mW / 2;
+        float dY = distY - mH / 2;
+        return (dX * dX + dY * dY <= r * r);
+    }
+
+//    public int side(float x, float y) {
+//        if ()
+//    }
 }

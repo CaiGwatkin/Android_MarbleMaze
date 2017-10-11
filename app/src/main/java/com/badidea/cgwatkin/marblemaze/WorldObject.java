@@ -20,10 +20,6 @@ abstract class WorldObject {
         mY = y;
     }
 
-    int getX() {
-        return mX;
-    }
-
     /**
      * Draws object on view.
      *
@@ -31,4 +27,6 @@ abstract class WorldObject {
      * @param p The paint.
      */
     abstract void draw(Canvas c, Paint p);
+
+    abstract public boolean collision(float x, float y, float r);
 }

@@ -97,7 +97,7 @@ public class MarbleView extends View {
      */
     public void update(float dT) {
         if (mMarble != null) {
-            mMarble.move(dT, mGX, mGY, getWidth(), getHeight());
+            mMarble.move(dT, mGX, mGY, getWidth(), getHeight(), mWorldObjects);
         }
     }
 
