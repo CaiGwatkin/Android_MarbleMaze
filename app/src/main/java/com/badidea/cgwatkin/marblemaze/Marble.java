@@ -83,11 +83,27 @@ public class Marble {
         if (!worldObjects.isEmpty()) {
             for (WorldObject wo: worldObjects) {
                 if (wo.collision(x, y, mR)) {
-                    mVX = -mVX * k;
-                    mVY = -mVY * k;
-                    mX = linearMovement(mX, mVX, dT);
-                    mY = linearMovement(mY, mVY, dT);
-                    return;
+                    switch (wo.side(x, y, mR)) {
+                        case LEFT:
+                            mVX = -mVX * k;
+                            break;
+                        case TOP:
+                            mVY = -mVY * k;
+                            break;
+                        case RIGHT:
+                            mVX = -mVX * k;
+                            break;
+                        case BOTTOM:
+                            mVY = -mVY * k;
+                            break;
+                        default:
+                            mVX = -mVX * k;
+                            mVY = -mVY * k;
+                            break;
+                    }
+                    x = linearMovement(mX, mVX, dT);
+                    y = linearMovement(mY, mVY, dT);
+                    break;
                 }
             }
         }

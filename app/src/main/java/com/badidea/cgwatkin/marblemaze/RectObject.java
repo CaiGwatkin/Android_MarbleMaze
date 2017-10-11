@@ -56,7 +56,58 @@ class RectObject extends WorldObject {
         return (dX * dX + dY * dY <= r * r);
     }
 
-//    public int side(float x, float y) {
-//        if ()
-//    }
+    @Override
+    public Side side(float x, float y, float r) {
+        int maxX = mX + mW;
+        int maxY = mY + mH;
+        if (x < mX) {
+            if (y < mY) {
+                if (mY - y < mX - x) {
+                    return Side.TOP;
+                }
+                else {
+                    return Side.LEFT;
+                }
+            }
+            else if (y > maxY) {
+                if (y - maxY < mX - x) {
+                    return Side.BOTTOM;
+                }
+                else {
+                    return Side.LEFT;
+                }
+            }
+            else {
+                return Side.LEFT;
+            }
+        }
+        else if (x > maxX) {
+            if (y < mY) {
+                if (mY - y < x - maxX) {
+                    return Side.TOP;
+                }
+                else {
+                    return Side.RIGHT;
+                }
+            }
+            else if (y > maxY) {
+                if (y - maxY < x - maxX) {
+                    return Side.BOTTOM;
+                }
+                else {
+                    return Side.RIGHT;
+                }
+            }
+            else {
+                return Side.RIGHT;
+            }
+        }
+        else if (y < mY) {
+            return Side.TOP;
+        }
+        else if (y > maxY) {
+            return Side.BOTTOM;
+        }
+        return Side.NONE;
+    }
 }

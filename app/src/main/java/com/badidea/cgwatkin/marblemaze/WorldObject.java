@@ -29,4 +29,14 @@ abstract class WorldObject {
     abstract void draw(Canvas c, Paint p);
 
     abstract public boolean collision(float x, float y, float r);
+
+    abstract public Side side(float x, float y, float r);
+}
+
+enum Side {
+    NONE,
+    LEFT,
+    TOP,
+    RIGHT,
+    BOTTOM
 }
