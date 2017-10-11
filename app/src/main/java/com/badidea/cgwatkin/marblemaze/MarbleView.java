@@ -7,20 +7,38 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class MarbleView extends View {
+    /**
+     * The radius of the marble to be displayed.
+     */
     static int RADIUS = 50;
+
+    static int DEFAULT_OBJECT_SIZE = 200;
 
     /**
      * The paint objects to colour etc. the marble.
      */
-    static Paint mPaint;
+    static Paint mPaintMarble, mPaintObject;
     static {
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(Color.argb(255, 255, 0, 0));
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(8);
-        mPaint.setAntiAlias(true);
+        mPaintMarble = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintMarble.setColor(Color.argb(255, 255, 0, 0));
+        mPaintMarble.setStyle(Paint.Style.STROKE);
+        mPaintMarble.setStrokeWidth(8);
+        mPaintMarble.setAntiAlias(true);
+
+        mPaintObject = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintObject.setColor(Color.argb(255, 0, 255, 0));
+        mPaintObject.setStyle(Paint.Style.STROKE);
+        mPaintObject.setStrokeWidth(8);
+        mPaintObject.setAntiAlias(true);
     }
+
+    /**
+     * Gravity values.
+     */
+    private float mGX, mGY;
 
     /**
      * The marble being displayed.
@@ -28,9 +46,9 @@ public class MarbleView extends View {
     private Marble mMarble;
 
     /**
-     * Gravity values.
+     * The objects in the world.
      */
-    private float mGX, mGY;
+    private ArrayList<WorldObject> mWorldObjects;
 
     /**
      * Marble View constructor.
@@ -42,7 +60,16 @@ public class MarbleView extends View {
         super(context, attrs);
         mGX = 0;
         mGY = 9.8f;
-        mMarble = new Marble(RADIUS * 2, RADIUS * 2, 0, 0, RADIUS);
+        mWorldObjects = new ArrayList<>();
+        this.post(new Runnable() {
+            @Override
+            public void run() {
+                mMarble = new Marble(getWidth() - RADIUS, getHeight() - RADIUS, 0, 0, RADIUS);
+                mWorldObjects.add(new RectObject(getWidth() / 2 - DEFAULT_OBJECT_SIZE / 2,
+                        getHeight() / 2 - DEFAULT_OBJECT_SIZE / 2,
+                        DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE));
+            }
+        });
     }
 
     /**
@@ -54,7 +81,12 @@ public class MarbleView extends View {
     protected void onDraw(Canvas c) {
         super.onDraw(c);
         if (mMarble != null) {
-            mMarble.draw(c, mPaint);
+            mMarble.draw(c, mPaintMarble);
+        }
+        if (!mWorldObjects.isEmpty()) {
+            for (WorldObject wo: mWorldObjects) {
+                wo.draw(c, mPaintObject);
+            }
         }
     }
 
@@ -79,45 +111,4 @@ public class MarbleView extends View {
         mGX = gX;
         mGY = gY;
     }
-
-
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//            mT = true;
-//            mTx = (int) event.getX();
-//            mTy = (int) event.getY();
-//
-//            synchronized (mMarbleList) {
-//                Iterator<Marble> i = mMarbleList.iterator();
-//                while (i.hasNext()) {
-//                    Marble b = i.next();
-//                    if (mMarble.inside(mTx, mTy)) {
-//                        mTouchedMarble=b;
-//                        mTouchedMarble.stop();
-//                        //  mMarble.reverse();//i.remove();
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            return true;
-//        }
-//        if (event.getAction() == MotionEvent.ACTION_UP) {
-//            mT = false;
-//            mTouchedMarble=null;
-//            return true;
-//        }
-//
-//        if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//            mTx = (int) event.getX();
-//            mTy = (int) event.getY();
-//            if(mTouchedMarble!=null)
-//                mTouchedMarble.move(mTx,mTy);
-//            return true;
-//        }
-//
-//
-//        return false;
-//    }
 }
