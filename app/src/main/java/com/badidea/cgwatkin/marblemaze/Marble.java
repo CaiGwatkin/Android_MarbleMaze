@@ -7,7 +7,12 @@ import android.graphics.RectF;
 
 import java.util.ArrayList;
 
-public class Marble {
+/**
+ * Marble class
+ *
+ * The main object in the world, which the user controls.
+ */
+class Marble {
     /**
      * The marble's position, radius and velocity values.
      */
@@ -45,8 +50,6 @@ public class Marble {
         c.save();
         c.translate(mX, mY);
         c.drawCircle(0, 0, mR, p);
-        float sr = 2f * mR / 3f;
-        c.drawArc(new RectF(-sr, -sr, sr, sr), 300, 30, false, p);
         c.restore();
     }
 
@@ -58,8 +61,9 @@ public class Marble {
      * @param gY Gravity in y plane.
      * @param w Width of canvas.
      * @param h Height of canvas.
+     * @return Type of hit.
      */
-    void move(float dT, float gX, float gY, float w, float h, ArrayList<WorldObject> worldObjects) {
+    HitType move(float dT, float gX, float gY, float w, float h, ArrayList<WorldObject> worldObjects) {
         mVX = updateVelocity(mVX, dT, gX);
         mVY = updateVelocity(mVY, dT, gY);
         float x = linearMovement(mX, mVX, dT);
@@ -78,58 +82,76 @@ public class Marble {
         if (bc) {
             mX = x;
             mY = y;
-            return;
+            return HitType.BOUNDARY;
         }
         if (!worldObjects.isEmpty()) {
             for (WorldObject wo: worldObjects) {
                 if (wo.collision(x, y, mR)) {
-                    switch (wo.side(x, y, mR)) {
-                        case LEFT:
-                            reverseVX();
-                            break;
-                        case TOP_LEFT:
-                            bounce();
-                            break;
-                        case TOP:
-                            reverseVY();
-                            break;
-                        case TOP_RIGHT:
-                            bounce();
-                            break;
-                        case RIGHT:
-                            reverseVX();
-                            break;
-                        case BOTTOM_RIGHT:
-                            bounce();
-                            break;
-                        case BOTTOM:
-                            reverseVY();
-                            break;
-                        case BOTTOM_LEFT:
-                            bounce();
-                            break;
-                        default:
-                            bounce();
-                            break;
+                    if (wo.isTarget()) {
+                        return HitType.TARGET;
+                    } else if (wo.isHole()) {
+                        return HitType.HOLE;
+                    } else {
+                        switch (wo.side(x, y, mR)) {
+                            case LEFT:
+                                reverseVX();
+                                break;
+                            case TOP_LEFT:
+                                bounce();
+                                break;
+                            case TOP:
+                                reverseVY();
+                                break;
+                            case TOP_RIGHT:
+                                bounce();
+                                break;
+                            case RIGHT:
+                                reverseVX();
+                                break;
+                            case BOTTOM_RIGHT:
+                                bounce();
+                                break;
+                            case BOTTOM:
+                                reverseVY();
+                                break;
+                            case BOTTOM_LEFT:
+                                bounce();
+                                break;
+                            default:
+                                bounce();
+                                break;
+                        }
+                        x = linearMovement(mX, mVX, dT);
+                        y = linearMovement(mY, mVY, dT);
+                        mX = x;
+                        mY = y;
+                        return HitType.OBJECT;
                     }
-                    x = linearMovement(mX, mVX, dT);
-                    y = linearMovement(mY, mVY, dT);
-                    break;
                 }
             }
         }
         mX = x;
         mY = y;
+        return HitType.NONE;
     }
 
+    /**
+     * Reverse velocity in x plane.
+     */
     private void reverseVX() {
         mVX = -mVX * k;
     }
 
+    /**
+     * Reverse velocity in y plane.
+     */
     private void reverseVY() {
         mVY = -mVY * k;
     }
 
+    /**
+     * Reverse velocity in both x and y planes.
+     */
     private void bounce() {
         mVX = -mVX * k;
         mVY = -mVY * k;
@@ -169,72 +191,15 @@ public class Marble {
     private boolean boundaryCollision(float coordinate, float boundary) {
         return coordinate < mR || coordinate > boundary - mR;
     }
+}
 
-//    void move(float x, float y) {
-//        mX = x;
-//        mY = y;
-//    }
-
-//    private float getX() {
-//        return mX;
-//    }
-//
-//    private float getR() {
-//        return mR;
-//    }
-//
-//    private float getY() {
-//        return mY;
-//    }
-
-//    /**
-//     * Update marble velocity on boundary intersection.
-//     *
-//     * @param boundaryW Width of boundary.
-//     * @param boundaryH Height of boundary.
-//     */
-//    void manageBoundaryIntersection(float boundaryW, float boundaryH) {
-//        if (mX < mR || mX > boundaryW - mR) {
-//            mVX = -mVX;
-//        }
-//        if (mY < mR || mY > boundaryH - mR) {
-//            mVY = -mVY;
-//        }
-//    }
-
-//    void manageMarbleIntersection(Marble b, Marble touchedMarble) {
-//        float bX = b.getX();
-//        float bY = b.getY();
-//        float bR = b.getR();
-//        float d = (mX - bX) * (mX - bX) + (mY - bY) * (mY - bY);
-//        if (d < (mR + bR) * (mR + bR)) {
-//            d = (float) Math.sqrt(d);
-//            float dx = (bX - mX) / d;
-//            float dy = (bY - mY) / d;
-//            float displacement = (mR + bR) - d;
-//            if (this != touchedMarble) {
-//                this.bounce(dx * displacement, dy * displacement);
-//            }
-//            if (b != touchedMarble) {
-//                b.bounce(-dx * displacement, -dy * displacement);
-//            }
-//        }
-//    }
-
-//    private void bounce(float dx,float dy) {
-//        mVX -= k * dx;
-//        mVY -= k * dy;
-//        mVX *=0.9f;
-//        mVY *=0.9f;
-//    }
-//
-//    void stop() {
-//        mVX =0;
-//        mVY =0;
-//    }
-
-
-//    boolean inside(float x, float y) {
-//        return (((x - mX) * (x - mX) + (y - mY) * (y - mY)) < mR * mR);
-//    }
+/**
+ * Hit types.
+ */
+enum HitType {
+    NONE,
+    BOUNDARY,
+    OBJECT,
+    TARGET,
+    HOLE
 }

@@ -3,11 +3,16 @@ package com.badidea.cgwatkin.marblemaze;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+/**
+ * World Object class
+ *
+ * Extended from to create world objects.
+ */
 abstract class WorldObject {
     /**
      * The object's position.
      */
-    int mX, mY, mW, mH;
+    int mX, mY;
 
     /**
      * WorldObject constructor
@@ -18,44 +23,6 @@ abstract class WorldObject {
     WorldObject(int x, int y) {
         mX = x;
         mY = y;
-        mW = 0;
-        mH = 0;
-    }
-
-    /**
-     * Get x coordinate.
-     *
-     * @return x coordinate.
-     */
-    int getX() {
-        return mX;
-    }
-
-    /**
-     * Get y coordinate.
-     *
-     * @return y coordinate.
-     */
-    int getY() {
-        return mY;
-    }
-
-    /**
-     * Get width value.
-     *
-     * @return Width.
-     */
-    int getW() {
-        return mW;
-    }
-
-    /**
-     * Get height value.
-     *
-     * @return Height.
-     */
-    int getH() {
-        return mH;
     }
 
     /**
@@ -82,15 +49,36 @@ abstract class WorldObject {
      * @param x Marble's centre's x coordinate.
      * @param y Marble's centre's y coordinate.
      * @param r Marble's radius.
-     * @return The Side of this object the marble is on.
+     * @return The CollisionSide of this object the marble is on.
      */
-    abstract public Side side(float x, float y, float r);
+    abstract public CollisionSide side(float x, float y, float r);
+
+    /**
+     * Returns true if object is target.
+     *
+     * @return True if object is target.
+     */
+    abstract public boolean isTarget();
+
+    /**
+     * Returns true if object is hole.
+     *
+     * @return True if object is hole.
+     */
+    abstract public boolean isHole();
+
+    /**
+     * Returns true if object is object.
+     *
+     * @return True if object is object.
+     */
+    abstract public boolean isObject();
 }
 
 /**
  * The different sides of an object the marble can be on.
  */
-enum Side {
+enum CollisionSide {
     NONE,
     LEFT,
     TOP_LEFT,

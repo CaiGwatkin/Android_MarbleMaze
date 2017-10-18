@@ -4,7 +4,17 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+/**
+ * Rect Object class
+ *
+ * Used for rectangle objects in world.
+ */
 class RectObject extends WorldObject {
+    /**
+     * The object's position.
+     */
+    int mW, mH;
+
     /**
      * The rectangle object that describes the
      */
@@ -68,40 +78,70 @@ class RectObject extends WorldObject {
      * @param x Marble's centre's x coordinate.
      * @param y Marble's centre's y coordinate.
      * @param r Marble's radius.
-     * @return The Side of this object the marble is on.
+     * @return The CollisionSide of this object the marble is on.
      */
     @Override
-    public Side side(float x, float y, float r) {
+    public CollisionSide side(float x, float y, float r) {
         int maxX = mX + mW;
         int maxY = mY + mH;
         if (x < mX) {
             if (y < mY) {
-                return Side.TOP_LEFT;
+                return CollisionSide.TOP_LEFT;
             }
             else if (y > maxY) {
-                return Side.BOTTOM_LEFT;
+                return CollisionSide.BOTTOM_LEFT;
             }
             else {
-                return Side.LEFT;
+                return CollisionSide.LEFT;
             }
         }
         else if (x > maxX) {
             if (y < mY) {
-                return Side.TOP_RIGHT;
+                return CollisionSide.TOP_RIGHT;
             }
             else if (y > maxY) {
-                return Side.BOTTOM_RIGHT;
+                return CollisionSide.BOTTOM_RIGHT;
             }
             else {
-                return Side.RIGHT;
+                return CollisionSide.RIGHT;
             }
         }
         else if (y < mY) {
-            return Side.TOP;
+            return CollisionSide.TOP;
         }
         else if (y > maxY) {
-            return Side.BOTTOM;
+            return CollisionSide.BOTTOM;
         }
-        return Side.NONE;
+        return CollisionSide.NONE;
+    }
+
+    /**
+     * Returns true if object is target.
+     *
+     * @return True if object is target.
+     */
+    @Override
+    public boolean isTarget() {
+        return false;
+    }
+
+    /**
+     * Returns true if object is hole.
+     *
+     * @return True if object is hole.
+     */
+    @Override
+    public boolean isHole() {
+        return false;
+    }
+
+    /**
+     * Returns true if object is object.
+     *
+     * @return True
+     */
+    @Override
+    public boolean isObject() {
+        return true;
     }
 }

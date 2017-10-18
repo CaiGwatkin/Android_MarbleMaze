@@ -1,5 +1,6 @@
 package com.badidea.cgwatkin.marblemaze;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,19 +21,31 @@ public class MarbleView extends View {
     /**
      * The paint objects to colour etc. the marble.
      */
-    static Paint mPaintMarble, mPaintObject;
+    static Paint mPaintMarble, mPaintObject, mPaintTarget, mPaintHole;
     static {
         mPaintMarble = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintMarble.setColor(Color.argb(255, 0, 255, 153));
-        mPaintMarble.setStyle(Paint.Style.STROKE);
+        mPaintMarble.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaintMarble.setStrokeWidth(8);
         mPaintMarble.setAntiAlias(true);
 
         mPaintObject = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintObject.setColor(Color.argb(255, 153, 0, 255));
-        mPaintObject.setStyle(Paint.Style.STROKE);
+        mPaintObject.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaintObject.setStrokeWidth(8);
         mPaintObject.setAntiAlias(true);
+
+        mPaintTarget = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintTarget.setColor(Color.argb(255, 0, 102, 255));
+        mPaintTarget.setStyle(Paint.Style.FILL_AND_STROKE);
+        mPaintTarget.setStrokeWidth(8);
+        mPaintTarget.setAntiAlias(true);
+
+        mPaintHole = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintHole.setColor(Color.argb(255, 0, 0, 0));
+        mPaintHole.setStyle(Paint.Style.FILL_AND_STROKE);
+        mPaintHole.setStrokeWidth(8);
+        mPaintHole.setAntiAlias(true);
     }
 
     /**
@@ -68,6 +81,8 @@ public class MarbleView extends View {
                 mWorldObjects.add(new RectObject(getWidth() / 2 - DEFAULT_OBJECT_SIZE / 2,
                         getHeight() / 2 - DEFAULT_OBJECT_SIZE / 2,
                         DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE));
+                mWorldObjects.add(new TargetObject(RADIUS, RADIUS, RADIUS));
+                mWorldObjects.add(new HoleObject(getWidth() - RADIUS, RADIUS, RADIUS));
             }
         });
     }
@@ -85,19 +100,17 @@ public class MarbleView extends View {
         }
         if (!mWorldObjects.isEmpty()) {
             for (WorldObject wo: mWorldObjects) {
-                wo.draw(c, mPaintObject);
+                Paint p = mPaintObject;
+                if (!wo.isObject()) {
+                    if (wo.isTarget()) {
+                        p = mPaintTarget;
+                    }
+                    else if (wo.isHole()) {
+                        p = mPaintHole;
+                    }
+                }
+                wo.draw(c, p);
             }
-        }
-    }
-
-    /**
-     * Updates the location and velocity of the marble.
-     *
-     * @param dT Difference in time.
-     */
-    public void update(float dT) {
-        if (mMarble != null) {
-            mMarble.move(dT, mGX, mGY, getWidth(), getHeight(), mWorldObjects);
         }
     }
 
@@ -110,5 +123,36 @@ public class MarbleView extends View {
     public void setGravity(float gX, float gY) {
         mGX = gX;
         mGY = gY;
+    }
+
+    /**
+     * Updates the location and velocity of the marble.
+     *
+     * @param dT Difference in time.
+     */
+    public void update(float dT) {
+        if (mMarble != null) {
+            HitType hit = mMarble.move(dT, mGX, mGY, getWidth(), getHeight(), mWorldObjects);
+            switch (hit) {
+                case NONE:
+                    break;
+                case TARGET:
+                    success();
+                    break;
+                case HOLE:
+                    failure();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void success() {
+        ((Activity) getContext()).finish();
+    }
+
+    private void failure() {
+        ((Activity) getContext()).finish();
     }
 }
