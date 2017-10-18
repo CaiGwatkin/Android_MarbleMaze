@@ -4,4 +4,9 @@
     <string name="welcome1">FEEL\nTHE MARBLE</string>
     <string name="welcome2">YOU ARE\nTHE MARBLE</string>
     <string name="welcome3">MARBLE\nPUZZLE</string>
+
+    <string name="world1">1</string>
+    <string name="world2">2</string>
+    <string name="world3">3</string>
+    <string name="world4">4</string>
 </resources>

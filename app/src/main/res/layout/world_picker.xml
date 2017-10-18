@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <com.badidea.cgwatkin.marblemaze.WorldPickerGridView
+        android:id="@+id/world_picker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:numColumns="auto_fit"
+        android:columnWidth="128dp"
+        android:verticalSpacing="16dp"
+        android:stretchMode="spacingWidthUniform"
+        android:drawSelectorOnTop="false"
+        tools:context="nz.ac.massey.caigwatkin.simplegallery.SimpleGallery"/>
+
+</RelativeLayout>

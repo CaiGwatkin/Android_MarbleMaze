@@ -134,7 +134,7 @@ public class WelcomeActivity extends Activity {
             final AnimatorListenerAdapter listener = new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    startAppIntent();
+                    startApp();
                 }
             };
             pulseText(textView, resourceInt, 70, interpolator, 2000, listener);
@@ -168,15 +168,17 @@ public class WelcomeActivity extends Activity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        startAppIntent();
+        startApp();
         return true;
     }
 
     /**
-     * Start marble puzzle activity through intent.
+     * Start marble maze.
      */
-    private void startAppIntent() {
-        Intent intent = new Intent(this, MarbleMazeActivity.class);
-        startActivity(intent);
+    private void startApp() {
+        setContentView(R.layout.world_picker);
+        ((WorldPickerGridView) findViewById(R.id.world_picker)).init();
+//        Intent intent = new Intent(this, MarbleMazeActivity.class);
+//        startActivity(intent);
     }
 }
