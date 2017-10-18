@@ -8,8 +8,9 @@
         android:id="@+id/world"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:textSize="100dp"
+        android:textSize="50dp"
         android:gravity="center"
-        android:background="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryLight"
+        android:background="@color/colorPrimary"/>
 
 </RelativeLayout>

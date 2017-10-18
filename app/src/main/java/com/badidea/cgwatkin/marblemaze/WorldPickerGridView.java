@@ -15,12 +15,6 @@ import java.util.ArrayList;
  * Displays a grid view of images sourced from device folders.
  */
 public class WorldPickerGridView extends GridView {
-
-    /**
-     * The adapter for this grid view.
-     */
-    private WorldAdapter mAdapter;
-
     /**
      * Stores thumbnail bitmaps for display;
      */
@@ -35,7 +29,6 @@ public class WorldPickerGridView extends GridView {
     public WorldPickerGridView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         setAdapter(new WorldAdapter(getContext(), mWorldList));
-        mAdapter = (WorldAdapter) getAdapter();
     }
 
     /**

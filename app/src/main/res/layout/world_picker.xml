@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_world"
+        android:textSize="30sp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center"/>
 
     <com.badidea.cgwatkin.marblemaze.WorldPickerGridView
         android:id="@+id/world_picker"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="8dp"
         android:numColumns="auto_fit"
         android:columnWidth="128dp"
@@ -18,4 +27,4 @@
         android:drawSelectorOnTop="false"
         tools:context="nz.ac.massey.caigwatkin.simplegallery.SimpleGallery"/>
 
-</RelativeLayout>
+</LinearLayout>

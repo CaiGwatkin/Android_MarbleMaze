@@ -23,13 +23,13 @@ public class MarbleView extends View {
     static Paint mPaintMarble, mPaintObject;
     static {
         mPaintMarble = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaintMarble.setColor(Color.argb(255, 255, 0, 0));
+        mPaintMarble.setColor(Color.argb(255, 0, 255, 153));
         mPaintMarble.setStyle(Paint.Style.STROKE);
         mPaintMarble.setStrokeWidth(8);
         mPaintMarble.setAntiAlias(true);
 
         mPaintObject = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaintObject.setColor(Color.argb(255, 0, 255, 0));
+        mPaintObject.setColor(Color.argb(255, 153, 0, 255));
         mPaintObject.setStyle(Paint.Style.STROKE);
         mPaintObject.setStrokeWidth(8);
         mPaintObject.setAntiAlias(true);

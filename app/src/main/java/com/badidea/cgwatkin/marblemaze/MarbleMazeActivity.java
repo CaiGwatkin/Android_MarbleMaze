@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 
 public class MarbleMazeActivity extends Activity implements SensorEventListener {
     /**
@@ -67,7 +68,7 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         super.onCreate(savedInstanceState);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_marble_puzzle);
+        setContentView(R.layout.activity_marble_maze);
         mMarbleView = (MarbleView) findViewById(R.id.marble_view);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -86,6 +87,7 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         startTime = System.currentTimeMillis();
         mHandler.post(mRefresh);
