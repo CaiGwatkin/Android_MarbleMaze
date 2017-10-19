@@ -2,8 +2,6 @@ package com.badidea.cgwatkin.marblemaze;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.RectF;
 
 import java.util.ArrayList;
 
@@ -87,7 +85,7 @@ class Marble {
         if (!worldObjects.isEmpty()) {
             for (WorldObject wo: worldObjects) {
                 if (wo.collision(x, y, mR)) {
-                    if (wo.isTarget()) {
+                    if (wo.isGoal()) {
                         return HitType.TARGET;
                     } else if (wo.isHole()) {
                         return HitType.HOLE;

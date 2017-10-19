@@ -3,8 +3,8 @@ package com.badidea.cgwatkin.marblemaze;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -21,32 +21,9 @@ public class MarbleView extends View {
     /**
      * The paint objects to colour etc. the marble.
      */
-    static Paint mPaintMarble, mPaintObject, mPaintTarget, mPaintHole;
-    static {
-        mPaintMarble = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaintMarble.setColor(Color.argb(255, 0, 255, 153));
-        mPaintMarble.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaintMarble.setStrokeWidth(8);
-        mPaintMarble.setAntiAlias(true);
+    private Paint mPaintMarble, mPaintObject, mPaintGoal, mPaintHole;
 
-        mPaintObject = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaintObject.setColor(Color.argb(255, 153, 0, 255));
-        mPaintObject.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaintObject.setStrokeWidth(8);
-        mPaintObject.setAntiAlias(true);
-
-        mPaintTarget = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaintTarget.setColor(Color.argb(255, 0, 102, 255));
-        mPaintTarget.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaintTarget.setStrokeWidth(8);
-        mPaintTarget.setAntiAlias(true);
-
-        mPaintHole = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaintHole.setColor(Color.argb(255, 0, 0, 0));
-        mPaintHole.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaintHole.setStrokeWidth(8);
-        mPaintHole.setAntiAlias(true);
-    }
+    private Context mContext;
 
     /**
      * Gravity values.
@@ -71,20 +48,54 @@ public class MarbleView extends View {
      */
     public MarbleView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
         mGX = 0;
         mGY = 9.8f;
         mWorldObjects = new ArrayList<>();
+        setPaint();
         this.post(new Runnable() {
             @Override
             public void run() {
-                mMarble = new Marble(getWidth() - RADIUS, getHeight() - RADIUS, 0, 0, RADIUS);
-                mWorldObjects.add(new RectObject(getWidth() / 2 - DEFAULT_OBJECT_SIZE / 2,
-                        getHeight() / 2 - DEFAULT_OBJECT_SIZE / 2,
-                        DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE));
-                mWorldObjects.add(new TargetObject(RADIUS, RADIUS, RADIUS));
-                mWorldObjects.add(new HoleObject(getWidth() - RADIUS, RADIUS, RADIUS));
+                createWorld();
             }
         });
+    }
+
+    /**
+     * Defines paints to be used for objects.
+     */
+    private void setPaint() {
+        mPaintMarble = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintMarble.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.marble, null));
+        mPaintMarble.setStyle(Paint.Style.FILL);
+        mPaintMarble.setAntiAlias(true);
+
+        mPaintObject = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintObject.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.wall, null));
+        mPaintObject.setStyle(Paint.Style.FILL);
+        mPaintObject.setAntiAlias(true);
+
+        mPaintGoal = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintGoal.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.target, null));
+        mPaintGoal.setStyle(Paint.Style.FILL);
+        mPaintGoal.setAntiAlias(true);
+
+        mPaintHole = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintHole.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.hole, null));
+        mPaintHole.setStyle(Paint.Style.FILL);
+        mPaintHole.setAntiAlias(true);
+    }
+
+    /**
+     * Creates world with marble, objects, target and hole.
+     */
+    private void createWorld() {
+        mMarble = new Marble(getWidth() - RADIUS, getHeight() - RADIUS, 0, 0, RADIUS);
+        mWorldObjects.add(new RectObject(getWidth() / 2 - DEFAULT_OBJECT_SIZE / 2,
+                getHeight() / 2 - DEFAULT_OBJECT_SIZE / 2,
+                DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE));
+        mWorldObjects.add(new GoalObject(RADIUS, RADIUS, RADIUS));
+        mWorldObjects.add(new HoleObject(getWidth() - RADIUS, RADIUS, RADIUS));
     }
 
     /**
@@ -102,8 +113,8 @@ public class MarbleView extends View {
             for (WorldObject wo: mWorldObjects) {
                 Paint p = mPaintObject;
                 if (!wo.isObject()) {
-                    if (wo.isTarget()) {
-                        p = mPaintTarget;
+                    if (wo.isGoal()) {
+                        p = mPaintGoal;
                     }
                     else if (wo.isHole()) {
                         p = mPaintHole;

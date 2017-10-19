@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <TextView
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/select_world"
         android:textSize="30sp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/marble"
         android:gravity="center"/>
 
     <com.badidea.cgwatkin.marblemaze.WorldPickerGridView

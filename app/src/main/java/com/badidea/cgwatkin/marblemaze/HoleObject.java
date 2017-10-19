@@ -10,7 +10,7 @@ class HoleObject extends WorldObject {
     private int mR;
 
     /**
-     * TargetObject constructor
+     * GoalObject constructor
      *
      * @param x Position of centre in x plane (top left if object.
      * @param y Position of centre in y plane.
@@ -49,7 +49,7 @@ class HoleObject extends WorldObject {
     }
 
     /**
-     * Not used with TargetObject.
+     * Not used with GoalObject.
      *
      * @param x Marble's centre's x coordinate.
      * @param y Marble's centre's y coordinate.
@@ -62,12 +62,12 @@ class HoleObject extends WorldObject {
     }
 
     /**
-     * Returns true if object is target.
+     * Returns true if object is goal.
      *
      * @return False
      */
     @Override
-    public boolean isTarget() {
+    public boolean isGoal() {
         return false;
     }
 

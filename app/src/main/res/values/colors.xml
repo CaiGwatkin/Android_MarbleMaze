@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff9900</color>
-    <color name="colorPrimaryDark">#b26b00</color>
-    <color name="colorPrimaryLight">#ffb74c</color>
-    <color name="colorComplementary">#0066ff</color>
-    <color name="colorTriadic1">#00ff99</color>
-    <color name="colorTriadic2">#9900ff</color>
+    <color name="primary">#e99c05</color>
+    <color name="primary_dark">#8e0000</color>
+    <color name="accent">#ffdc02</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="black">#000000</color>
+
+    <color name="background">#8e0000</color>
+    <color name="wall">#bb3508</color>
+    <color name="marble">#e99c05</color>
+    <color name="target">#ffdc02</color>
+    <color name="hole">#000000</color>
 </resources>

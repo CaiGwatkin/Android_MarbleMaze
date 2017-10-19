@@ -4,6 +4,7 @@
     <string name="welcome1">BE\nTHE MARBLE</string>
     <string name="welcome2">LIVE\nTHE MAZE</string>
     <string name="welcome3">MARBLE\nMAZE</string>
+    <string name="welcome_continue">CONTINUE</string>
 
     <string name="select_world">SELECT WORLD</string>
     <string name="world1">W1</string>

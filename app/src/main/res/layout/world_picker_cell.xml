@@ -10,7 +10,7 @@
         android:layout_height="128dp"
         android:textSize="50dp"
         android:gravity="center"
-        android:textColor="@color/colorPrimaryLight"
-        android:background="@color/colorPrimary"/>
+        android:textColor="@color/target"
+        android:background="@color/wall"/>
 
 </RelativeLayout>

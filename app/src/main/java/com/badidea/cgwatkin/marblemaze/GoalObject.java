@@ -3,20 +3,20 @@ package com.badidea.cgwatkin.marblemaze;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-class TargetObject extends WorldObject {
+class GoalObject extends WorldObject {
     /**
      * The object's position.
      */
     private int mR;
 
     /**
-     * TargetObject constructor
+     * GoalObject constructor
      *
      * @param x Position of centre in x plane (top left if object.
      * @param y Position of centre in y plane.
      * @param r Radius.
      */
-    TargetObject(int x, int y, int r) {
+    GoalObject(int x, int y, int r) {
         super(x, y);
         mR = r;
     }
@@ -49,7 +49,7 @@ class TargetObject extends WorldObject {
     }
 
     /**
-     * Not used with TargetObject.
+     * Not used with GoalObject.
      *
      * @param x Marble's centre's x coordinate.
      * @param y Marble's centre's y coordinate.
@@ -62,12 +62,12 @@ class TargetObject extends WorldObject {
     }
 
     /**
-     * Returns true if object is target.
+     * Returns true if object is goal.
      *
      * @return True
      */
     @Override
-    public boolean isTarget() {
+    public boolean isGoal() {
         return true;
     }
 

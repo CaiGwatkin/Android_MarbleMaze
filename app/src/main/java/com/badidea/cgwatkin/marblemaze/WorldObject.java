@@ -54,11 +54,11 @@ abstract class WorldObject {
     abstract public CollisionSide side(float x, float y, float r);
 
     /**
-     * Returns true if object is target.
+     * Returns true if object is goal.
      *
-     * @return True if object is target.
+     * @return True if object is goal.
      */
-    abstract public boolean isTarget();
+    abstract public boolean isGoal();
 
     /**
      * Returns true if object is hole.

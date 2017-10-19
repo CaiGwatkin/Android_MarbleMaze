@@ -121,7 +121,7 @@ class RectObject extends WorldObject {
      * @return True if object is target.
      */
     @Override
-    public boolean isTarget() {
+    public boolean isGoal() {
         return false;
     }
 

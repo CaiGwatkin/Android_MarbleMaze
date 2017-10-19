@@ -3,8 +3,6 @@ package com.badidea.cgwatkin.marblemaze;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.content.Intent;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -46,7 +44,7 @@ public class WelcomeActivity extends Activity {
     /**
      * The view containing the welcome message.
      */
-    private TextView mContentView;
+    private TextView mWelcomeTextView;
 
     /**
      * The runnable that starts the transition to the next welcome message.
@@ -68,8 +66,7 @@ public class WelcomeActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_welcome);
-        mContentView = (TextView) findViewById(R.id.fullscreen_content);
-
+        mWelcomeTextView = (TextView) findViewById(R.id.welcome_text);
         mNextWelcomeMessage = 0;
     }
 
@@ -92,7 +89,7 @@ public class WelcomeActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+        findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -118,30 +115,32 @@ public class WelcomeActivity extends Activity {
         int resourceInt = mWelcomeMessages.get(mNextWelcomeMessage);
         mNextWelcomeMessage++;
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
-        final TextView textView = mContentView;
 
         if (mNextWelcomeMessage < mWelcomeMessages.size()) {
             final Integer duration = 1500;
             final AnimatorListenerAdapter listener = new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            textView.animate()
+                            mWelcomeTextView.animate()
                                     .setInterpolator(interpolator)
                                     .alpha(0f)
                                     .setDuration(duration);
                         }
                     };
-            pulseText(textView, resourceInt, 40, interpolator, duration, listener);
+            pulseText(mWelcomeTextView, resourceInt, 40, interpolator, duration, listener);
             delayedNext(3000);
         }
         else if (mNextWelcomeMessage == mWelcomeMessages.size()) {
             final AnimatorListenerAdapter listener = new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    startApp();
+                    findViewById(R.id.welcome_continue).animate()
+                            .setInterpolator(interpolator)
+                            .alpha(1f)
+                            .setDuration(1500);
                 }
             };
-            pulseText(textView, resourceInt, 70, interpolator, 2000, listener);
+            pulseText(mWelcomeTextView, resourceInt, 70, interpolator, 2000, listener);
         }
     }
 
@@ -170,19 +169,16 @@ public class WelcomeActivity extends Activity {
                 .setListener(listener);
     }
 
+    /**
+     * Start app when touch event occurs.
+     *
+     * @param event The touch event
+     * @return true
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        startApp();
-        return true;
-    }
-
-    /**
-     * Start marble maze.
-     */
-    private void startApp() {
         setContentView(R.layout.world_picker);
         ((WorldPickerGridView) findViewById(R.id.world_picker)).init();
-//        Intent intent = new Intent(this, MarbleMazeActivity.class);
-//        startActivity(intent);
+        return true;
     }
 }
