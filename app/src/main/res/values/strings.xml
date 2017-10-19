@@ -4,11 +4,14 @@
     <string name="welcome1">BE\nTHE MARBLE</string>
     <string name="welcome2">LIVE\nTHE MAZE</string>
     <string name="welcome3">MARBLE\nMAZE</string>
-    <string name="welcome_continue">CONTINUE</string>
+    <string name="tap_to_continue">TAP TO CONTINUE</string>
 
     <string name="select_world">SELECT WORLD</string>
     <string name="world1">W1</string>
     <string name="world2">W2</string>
     <string name="world3">W3</string>
     <string name="world4">W4</string>
+
+    <string name="success">SUCCESS!</string>
+    <string name="failure">FAILURE :(</string>
 </resources>

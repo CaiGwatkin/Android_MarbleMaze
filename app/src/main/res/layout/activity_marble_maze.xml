@@ -12,4 +12,11 @@
         android:layout_height="match_parent"
         android:background="@color/background"/>
 
+    <LinearLayout
+        android:id="@+id/success_failure_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"/>
+
 </FrameLayout>

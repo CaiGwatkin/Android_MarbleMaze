@@ -19,11 +19,19 @@ public class MarbleView extends View {
     static int DEFAULT_OBJECT_SIZE = 200;
 
     /**
+     * Context.
+     */
+    private Context mContext;
+
+    /**
+     * SuccessObserver, for callback to activity.
+     */
+    private SuccessObserver mSuccessObserver;
+
+    /**
      * The paint objects to colour etc. the marble.
      */
     private Paint mPaintMarble, mPaintObject, mPaintGoal, mPaintHole;
-
-    private Context mContext;
 
     /**
      * Gravity values.
@@ -59,6 +67,15 @@ public class MarbleView extends View {
                 createWorld();
             }
         });
+    }
+
+    /**
+     * Set the observer of this view.
+     *
+     * @param observer The observer.
+     */
+    public void setSuccessObserver(SuccessObserver observer){
+        mSuccessObserver = observer;
     }
 
     /**
@@ -159,11 +176,27 @@ public class MarbleView extends View {
         }
     }
 
+    /**
+     * Goal has been collided with.
+     */
     private void success() {
-        ((Activity) getContext()).finish();
+        if (mSuccessObserver != null) {
+            mSuccessObserver.success();
+        }
+        else {
+            ((Activity) getContext()).finish();
+        }
     }
 
+    /**
+     * Hole has been collided with.
+     */
     private void failure() {
-        ((Activity) getContext()).finish();
+        if (mSuccessObserver != null) {
+            mSuccessObserver.failure();
+        }
+        else {
+            ((Activity) getContext()).finish();
+        }
     }
 }

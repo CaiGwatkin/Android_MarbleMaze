@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:background="@color/target"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/success_failure_message"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:paddingTop="20dp"
+        android:textSize="50dp"
+        android:textColor="@color/background"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:paddingBottom="20dp"
+        android:textSize="20dp"
+        android:text="@string/tap_to_continue"
+        android:textColor="@color/background"/>
+
+</LinearLayout>

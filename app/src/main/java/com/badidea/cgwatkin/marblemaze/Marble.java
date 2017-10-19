@@ -66,25 +66,11 @@ class Marble {
         mVY = updateVelocity(mVY, dT, gY);
         float x = linearMovement(mX, mVX, dT);
         float y = linearMovement(mY, mVY, dT);
-        boolean bc = false;
-        if (boundaryCollision(x, w)) {
-            mVX = -mVX * k;
-            x = linearMovement(mX, mVX, dT);
-            bc = true;
-        }
-        if (boundaryCollision(y, h)) {
-            mVY = -mVY * k;
-            y = linearMovement(mY, mVY, dT);
-            bc = true;
-        }
-        if (bc) {
-            mX = x;
-            mY = y;
-            return HitType.BOUNDARY;
-        }
         if (!worldObjects.isEmpty()) {
             for (WorldObject wo: worldObjects) {
                 if (wo.collision(x, y, mR)) {
+                    mX = x;
+                    mY = y;
                     if (wo.isGoal()) {
                         return HitType.TARGET;
                     } else if (wo.isHole()) {
@@ -127,6 +113,22 @@ class Marble {
                     }
                 }
             }
+        }
+        boolean bc = false;
+        if (boundaryCollision(x, w)) {
+            mVX = -mVX * k;
+            x = linearMovement(mX, mVX, dT);
+            bc = true;
+        }
+        if (boundaryCollision(y, h)) {
+            mVY = -mVY * k;
+            y = linearMovement(mY, mVY, dT);
+            bc = true;
+        }
+        if (bc) {
+            mX = x;
+            mY = y;
+            return HitType.BOUNDARY;
         }
         mX = x;
         mY = y;
