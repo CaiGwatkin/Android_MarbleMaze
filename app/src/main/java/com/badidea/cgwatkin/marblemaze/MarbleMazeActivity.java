@@ -19,6 +19,11 @@ import android.widget.TextView;
  */
 public class MarbleMazeActivity extends Activity implements SensorEventListener {
 
+    enum Action {
+        SUCCESS,
+        FAILURE
+    }
+
     /**
      * Thread handler allow screen refresh after set delay.
      */
@@ -67,31 +72,15 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         mMarbleView.setSuccessObserver(new SuccessObserver() {
             @Override
             public void success() {
-                doSuccessFailure(R.string.success);
+                doSuccessFailure(Action.SUCCESS);
             }
 
             @Override
             public void failure() {
-                doSuccessFailure(R.string.failure);
+                doSuccessFailure(Action.FAILURE);
             }
         });
         mRefresh = new RefreshWorld(mMarbleView, mHandler);
-    }
-
-    private void doSuccessFailure(int messageResource) {
-        mRefresh.pause();
-        mSensorManager.unregisterListener(this);
-        mHandler.removeCallbacks(mRefresh);
-        View successFailureLayout = LayoutInflater.from(this).inflate(R.layout.success_failure, mSuccessFailureDisplay,
-                false);
-        ((TextView) successFailureLayout.findViewById(R.id.success_failure_message)).setText(messageResource);
-        mSuccessFailureDisplay.addView(successFailureLayout);
-        mMarbleView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     /**
@@ -142,4 +131,49 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
      */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+
+    /**
+     * Deal with success or failure.
+     *
+     * @param action Success or failure.
+     */
+    private void doSuccessFailure(Action action) {
+        mRefresh.pause();
+        mHandler.removeCallbacks(mRefresh);
+        View successFailureLayout = LayoutInflater.from(this).inflate(R.layout.success_failure, mSuccessFailureDisplay,
+                false);
+        int messageResource;
+        if (action == Action.SUCCESS) {
+            messageResource = R.string.success;
+            mMarbleView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            mSensorManager.unregisterListener(this);
+        }
+        else {
+            messageResource = R.string.failure;
+            mMarbleView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    restartWorld();
+                }
+            });
+        }
+        ((TextView) successFailureLayout.findViewById(R.id.success_failure_message)).setText(messageResource);
+        mSuccessFailureDisplay.addView(successFailureLayout);
+    }
+
+    /**
+     * Restart world.
+     */
+    private void restartWorld() {
+        mMarbleView.createWorld();
+        mSuccessFailureDisplay.removeAllViews();
+        mMarbleView.setOnClickListener(null);
+        mRefresh.unPause();
+        mHandler.post(mRefresh.setStartTime(System.currentTimeMillis()));
+    }
 }

@@ -106,7 +106,7 @@ public class MarbleView extends View {
     /**
      * Creates world with marble, objects, target and hole.
      */
-    private void createWorld() {
+    public void createWorld() {
         mMarble = new Marble(getWidth() - RADIUS, getHeight() - RADIUS, 0, 0, RADIUS);
         mWorldObjects.add(new RectObject(getWidth() / 2 - DEFAULT_OBJECT_SIZE / 2,
                 getHeight() / 2 - DEFAULT_OBJECT_SIZE / 2,
