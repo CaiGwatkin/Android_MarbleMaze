@@ -16,8 +16,6 @@ public class MarbleView extends View {
      */
     static int RADIUS = 40;
 
-    static int DEFAULT_OBJECT_SIZE = 200;
-
     /**
      * Context.
      */
@@ -31,7 +29,7 @@ public class MarbleView extends View {
     /**
      * The paint objects to colour etc. the marble.
      */
-    private Paint mPaintMarble, mPaintObject, mPaintGoal, mPaintHole;
+    private Paint mPaintMarble, mPaintWall, mPaintGoal, mPaintHole;
 
     /**
      * Gravity values.
@@ -87,10 +85,11 @@ public class MarbleView extends View {
         mPaintMarble.setStyle(Paint.Style.FILL);
         mPaintMarble.setAntiAlias(true);
 
-        mPaintObject = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaintObject.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.wall, null));
-        mPaintObject.setStyle(Paint.Style.FILL);
-        mPaintObject.setAntiAlias(true);
+        mPaintWall = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintWall.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.wall, null));
+        mPaintWall.setStrokeWidth(2);
+        mPaintWall.setStyle(Paint.Style.STROKE);
+        mPaintWall.setAntiAlias(true);
 
         mPaintGoal = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintGoal.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.target, null));
@@ -108,11 +107,9 @@ public class MarbleView extends View {
      */
     public void createWorld() {
         mMarble = new Marble(getWidth() - RADIUS, getHeight() - RADIUS, 0, 0, RADIUS);
-        mWorldObjects.add(new RectObject(getWidth() / 2 - DEFAULT_OBJECT_SIZE / 2,
-                getHeight() / 2 - DEFAULT_OBJECT_SIZE / 2,
-                DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE));
-        mWorldObjects.add(new GoalObject(RADIUS, RADIUS, RADIUS));
-        mWorldObjects.add(new HoleObject(getWidth() - RADIUS, RADIUS, RADIUS));
+        mWorldObjects.add(new WallObject(RADIUS * 2, getHeight() / 2, getWidth() - RADIUS, getHeight() / 2));
+//        mWorldObjects.add(new GoalObject(RADIUS, RADIUS, RADIUS));
+//        mWorldObjects.add(new HoleObject(getWidth() - RADIUS, RADIUS, RADIUS));
     }
 
     /**
@@ -128,8 +125,8 @@ public class MarbleView extends View {
         }
         if (!mWorldObjects.isEmpty()) {
             for (WorldObject wo: mWorldObjects) {
-                Paint p = mPaintObject;
-                if (!wo.isObject()) {
+                Paint p = mPaintWall;
+                if (!wo.isWall()) {
                     if (wo.isGoal()) {
                         p = mPaintGoal;
                     }
@@ -162,8 +159,6 @@ public class MarbleView extends View {
         if (mMarble != null) {
             HitType hit = mMarble.move(dT, mGX, mGY, getWidth(), getHeight(), mWorldObjects);
             switch (hit) {
-                case NONE:
-                    break;
                 case TARGET:
                     success();
                     break;

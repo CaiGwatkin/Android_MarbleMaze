@@ -76,52 +76,30 @@ class Marble {
                     } else if (wo.isHole()) {
                         return HitType.HOLE;
                     } else {
-                        switch (wo.side(x, y, mR)) {
-                            case LEFT:
-                                reverseVX();
-                                break;
-                            case TOP_LEFT:
-                                bounce();
-                                break;
-                            case TOP:
-                                reverseVY();
-                                break;
-                            case TOP_RIGHT:
-                                bounce();
-                                break;
-                            case RIGHT:
-                                reverseVX();
-                                break;
-                            case BOTTOM_RIGHT:
-                                bounce();
-                                break;
-                            case BOTTOM:
-                                reverseVY();
-                                break;
-                            case BOTTOM_LEFT:
-                                bounce();
-                                break;
-                            default:
-                                bounce();
-                                break;
-                        }
+                        bounce();
+//                        if (((WallObject) wo).isHorizontal()) {
+//                            reverseVY();
+//                        }
+//                        else {
+//                            reverseVX();
+//                        }
                         x = linearMovement(mX, mVX, dT);
                         y = linearMovement(mY, mVY, dT);
                         mX = x;
                         mY = y;
-                        return HitType.OBJECT;
+                        return HitType.WALL;
                     }
                 }
             }
         }
         boolean bc = false;
         if (boundaryCollision(x, w)) {
-            mVX = -mVX * k;
+            reverseVX();
             x = linearMovement(mX, mVX, dT);
             bc = true;
         }
         if (boundaryCollision(y, h)) {
-            mVY = -mVY * k;
+            reverseVY();
             y = linearMovement(mY, mVY, dT);
             bc = true;
         }
@@ -153,8 +131,8 @@ class Marble {
      * Reverse velocity in both x and y planes.
      */
     private void bounce() {
-        mVX = -mVX * k;
-        mVY = -mVY * k;
+        reverseVX();
+        reverseVY();
     }
 
     /**
@@ -199,7 +177,7 @@ class Marble {
 enum HitType {
     NONE,
     BOUNDARY,
-    OBJECT,
+    WALL,
     TARGET,
     HOLE
 }
