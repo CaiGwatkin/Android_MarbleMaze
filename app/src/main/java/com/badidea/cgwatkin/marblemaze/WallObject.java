@@ -44,10 +44,37 @@ class WallObject implements WorldObject {
      * @param x Marble's centre's x coordinate.
      * @param y Marble's centre's y coordinate.
      * @param r Marble's radius.
+     * @param vX Marble's velocity in x plane.
+     * @param vY Marble's velocity in y plane.
      * @return True if collision occurred.
      */
-    public boolean collision(double x, double y, double r) {
+    public boolean collision(double x, double y, double r, double vX, double vY) {
         return lineCircle(mX1, mY1, mX2, mY2, x, y, r);
+//        r = r - 0.1;
+//        if (isHorizontal()) {
+//            // Horizontal
+//            if (vY > 0 && y < mY1) {
+//                // Increasing y
+//                return y > mY1 - r && x >= mX1 && x <= mX2;
+//            }
+//            else if (y > mY1) {
+//                // Increasing x
+//                return y < mY1 + r && x >= mX1 && x <= mX2;
+//            }
+//            return false;
+//        }
+//        else {
+//            // Vertical
+//            if (vX > 0 && x < mX1) {
+//                // Increasing y
+//                return x > mX1 - r && y >= mY1 && y <= mY2;
+//            }
+//            else if (x > mX1) {
+//                // Increasing x
+//                return x < mX1 + r && y >= mY1 && y <= mY2;
+//            }
+//            return false;
+//        }
     }
 
     /**
@@ -83,7 +110,7 @@ class WallObject implements WorldObject {
      * @return true if wall is horizontal.
      */
     boolean isHorizontal() {
-        return mX1 == mX2;
+        return mY1 == mY2;
     }
 
     /* *****************************************************************************************************************
@@ -167,9 +194,8 @@ class WallObject implements WorldObject {
      * @return Distance between two points.
      */
     private double distance(double x1, double y1, double x2, double y2) {
-        double distX = x1 - y1;
-        double distY = x2 - y2;
-//        return (double) Math.sqrt( (distX*distX) + (distY*distY) );
+        double distX = x1 - x2;
+        double distY = y1 - y2;
         return Math.hypot( distX, distY );
     }
 }

@@ -68,7 +68,7 @@ class Marble {
         double y = linearMovement(mY, mVY, dT);
         if (!worldObjects.isEmpty()) {
             for (WorldObject wo: worldObjects) {
-                if (wo.collision(x, y, mR)) {
+                if (wo.collision(x, y, mR, mVX, mVY)) {
                     mX = x;
                     mY = y;
                     if (wo.isGoal()) {
@@ -76,7 +76,6 @@ class Marble {
                     } else if (wo.isHole()) {
                         return HitType.HOLE;
                     } else {
-//                        bounce();
                         if (((WallObject) wo).isHorizontal()) {
                             reverseVY();
                         }
