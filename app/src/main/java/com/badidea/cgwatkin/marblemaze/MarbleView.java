@@ -34,7 +34,7 @@ public class MarbleView extends View {
     /**
      * Gravity values.
      */
-    private float mGX, mGY;
+    private double mGX, mGY;
 
     /**
      * The marble being displayed.
@@ -145,7 +145,7 @@ public class MarbleView extends View {
      * @param gX Gravity in x plane.
      * @param gY Gravity in y plane.
      */
-    public void setGravity(float gX, float gY) {
+    public void setGravity(double gX, double gY) {
         mGX = gX;
         mGY = gY;
     }
@@ -155,7 +155,7 @@ public class MarbleView extends View {
      *
      * @param dT Difference in time.
      */
-    public void update(float dT) {
+    public void update(double dT) {
         if (mMarble != null) {
             HitType hit = mMarble.move(dT, mGX, mGY, getWidth(), getHeight(), mWorldObjects);
             switch (hit) {

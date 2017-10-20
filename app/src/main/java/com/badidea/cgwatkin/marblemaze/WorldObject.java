@@ -26,7 +26,7 @@ interface WorldObject {
      * @param r Marble's radius.
      * @return True if collision occurred.
      */
-    boolean collision(float x, float y, float r);
+    boolean collision(double x, double y, double r);
 
     /**
      * Returns true if object is goal.

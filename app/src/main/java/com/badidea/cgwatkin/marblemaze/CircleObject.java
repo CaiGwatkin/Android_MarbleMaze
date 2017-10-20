@@ -58,7 +58,7 @@ abstract class CircleObject implements WorldObject {
      * @return true if collision occurred.
      */
     @Override
-    public boolean collision(float x, float y, float r) {
+    public boolean collision(double x, double y, double r) {
         return ((mX - x) * (mX - x) + (mY - y) * (mY - y)) < ((mR + r) * (mR + r));
     }
 

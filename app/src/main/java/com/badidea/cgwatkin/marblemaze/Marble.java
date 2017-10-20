@@ -14,12 +14,12 @@ class Marble {
     /**
      * The marble's position, radius and velocity values.
      */
-    private float mX, mY, mR, mVX, mVY;
+    private double mX, mY, mR, mVX, mVY;
 
     /**
      * Velocity modifier on collision.
      */
-    private float k = 0.3f;
+    private double k = 0.3;
 
     /**
      * Marble constructor
@@ -30,7 +30,7 @@ class Marble {
      * @param vY Velocity in y plane.
      * @param r Radius.
      */
-    Marble(int x, int y, float vX, float vY, float r) {
+    Marble(int x, int y, double vX, double vY, double r) {
         mX = x;
         mY = y;
         mR = r;
@@ -46,8 +46,8 @@ class Marble {
      */
     void draw(Canvas c, Paint p) {
         c.save();
-        c.translate(mX, mY);
-        c.drawCircle(0, 0, mR, p);
+        c.translate((float) mX, (float) mY);
+        c.drawCircle(0, 0, (float) mR, p);
         c.restore();
     }
 
@@ -61,11 +61,11 @@ class Marble {
      * @param h Height of canvas.
      * @return Type of hit.
      */
-    HitType move(float dT, float gX, float gY, float w, float h, ArrayList<WorldObject> worldObjects) {
+    HitType move(double dT, double gX, double gY, double w, double h, ArrayList<WorldObject> worldObjects) {
         mVX = updateVelocity(mVX, dT, gX);
         mVY = updateVelocity(mVY, dT, gY);
-        float x = linearMovement(mX, mVX, dT);
-        float y = linearMovement(mY, mVY, dT);
+        double x = linearMovement(mX, mVX, dT);
+        double y = linearMovement(mY, mVY, dT);
         if (!worldObjects.isEmpty()) {
             for (WorldObject wo: worldObjects) {
                 if (wo.collision(x, y, mR)) {
@@ -76,13 +76,13 @@ class Marble {
                     } else if (wo.isHole()) {
                         return HitType.HOLE;
                     } else {
-                        bounce();
-//                        if (((WallObject) wo).isHorizontal()) {
-//                            reverseVY();
-//                        }
-//                        else {
-//                            reverseVX();
-//                        }
+//                        bounce();
+                        if (((WallObject) wo).isHorizontal()) {
+                            reverseVY();
+                        }
+                        else {
+                            reverseVX();
+                        }
                         x = linearMovement(mX, mVX, dT);
                         y = linearMovement(mY, mVY, dT);
                         mX = x;
@@ -143,7 +143,7 @@ class Marble {
      * @param dT The time difference.
      * @return The new coordinate.
      */
-    private float linearMovement(float coordinate, float v, float dT) {
+    private double linearMovement(double coordinate, double v, double dT) {
         return coordinate + (v * dT * 100);
     }
 
@@ -155,7 +155,7 @@ class Marble {
      * @param g The gravity modifier.
      * @return The new velocity.
      */
-    private float updateVelocity(float v, float dT, float g) {
+    private double updateVelocity(double v, double dT, double g) {
         return v + (dT * g * 10);
     }
 
@@ -166,7 +166,7 @@ class Marble {
      * @param boundary The boundary value.
      * @return True if boundary collision occurred.
      */
-    private boolean boundaryCollision(float coordinate, float boundary) {
+    private boolean boundaryCollision(double coordinate, double boundary) {
         return coordinate < mR || coordinate > boundary - mR;
     }
 }

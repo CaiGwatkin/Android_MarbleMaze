@@ -46,7 +46,7 @@ class WallObject implements WorldObject {
      * @param r Marble's radius.
      * @return True if collision occurred.
      */
-    public boolean collision(float x, float y, float r) {
+    public boolean collision(double x, double y, double r) {
         return lineCircle(mX1, mY1, mX2, mY2, x, y, r);
     }
 
@@ -90,7 +90,7 @@ class WallObject implements WorldObject {
      * Following sampled from http://www.jeffreythompson.org/collision-detection/line-circle.php
      */
     // LINE/CIRCLE
-    private boolean lineCircle(float x1, float y1, float x2, float y2, float cx, float cy, float r) {
+    private boolean lineCircle(double x1, double y1, double x2, double y2, double cx, double cy, double r) {
 
         // is either end INSIDE the circle?
         // if so, return true immediately
@@ -99,38 +99,33 @@ class WallObject implements WorldObject {
         }
 
         // get length of the line
-        float len = distance(x1, y1, x2, y2);
+        double len = distance(x1, y1, x2, y2);
 
         // get dot product of the line and circle
-        float dot = ( ((cx - x1) * (x2 - x1)) + ((cy - y1) * (y2 - y1)) ) / (float) Math.pow(len, 2);
+        double dot = ( ((cx - x1) * (x2 - x1)) + ((cy - y1) * (y2 - y1)) ) / Math.pow(len, 2);
 
         // find the closest point on the line
-        float closestX = x1 + (dot * (x2 - x1));
-        float closestY = y1 + (dot * (y2 - y1));
+        double closestX = x1 + (dot * (x2 - x1));
+        double closestY = y1 + (dot * (y2 - y1));
 
-        Log.d("closestX", String.valueOf(closestX));
-        Log.d("closestY", String.valueOf(closestY));
-        Log.d("       X", String.valueOf(cx));
-        Log.d("       Y", String.valueOf(cy));
-
-//        // is this point actually on the line segment?
-//        // if so keep going, but if not, return false
-//        boolean onSegment = linePoint(x1, y1, x2, y2, closestX, closestY);
-//        if (!onSegment) {
-//            return false;
-//        }
+        // is this point actually on the line segment?
+        // if so keep going, but if not, return false
+        boolean onSegment = linePoint(x1, y1, x2, y2, closestX, closestY);
+        if (!onSegment) {
+            return false;
+        }
 
         // get distance to closest point
-        float distance = distance(closestX, closestY, cx, cy);
+        double distance = distance(closestX, closestY, cx, cy);
         return distance <= r;
     }
 
 
     // POINT/CIRCLE
-    private boolean pointCircle(float px, float py, float cx, float cy, float r) {
+    private boolean pointCircle(double px, double py, double cx, double cy, double r) {
 
         // get distance between the point and circle's center
-        float distance = distance(px, py, cx, cy);
+        double distance = distance(px, py, cx, cy);
 
         // if the distance is less than the circle's
         // radius the point is inside!
@@ -139,18 +134,18 @@ class WallObject implements WorldObject {
 
 
     // LINE/POINT
-    private boolean linePoint(float x1, float y1, float x2, float y2, float px, float py) {
+    private boolean linePoint(double x1, double y1, double x2, double y2, double px, double py) {
 
         // get distance from the point to the two ends of the line
-        float d1 = distance(px, py, x1, y1);
-        float d2 = distance(px, py, x2, y2);
+        double d1 = distance(px, py, x1, y1);
+        double d2 = distance(px, py, x2, y2);
 
         // get the length of the line
-        float lineLen = distance(x1, y1, x2, y2);
+        double lineLen = distance(x1, y1, x2, y2);
 
-        // since floats are so minutely accurate, add
+        // since doubles are so minutely accurate, add
         // a little buffer zone that will give collision
-        float buffer = 0.1f;    // higher # = less accurate
+        double buffer = 0.1;    // higher # = less accurate
 
         // if the two distances are equal to the line's
         // length, the point is on the line!
@@ -171,10 +166,10 @@ class WallObject implements WorldObject {
      * @param y2 Point 2 y coordinate.
      * @return Distance between two points.
      */
-    private float distance(float x1, float y1, float x2, float y2) {
-        float distX = x1 - y1;
-        float distY = x2 - y2;
-//        return (float) Math.sqrt( (distX*distX) + (distY*distY) );
-        return (float) Math.hypot( distX, distY );
+    private double distance(double x1, double y1, double x2, double y2) {
+        double distX = x1 - y1;
+        double distY = x2 - y2;
+//        return (double) Math.sqrt( (distX*distX) + (distY*distY) );
+        return Math.hypot( distX, distY );
     }
 }
