@@ -227,19 +227,26 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
      */
     private ArrayList<WorldObject> createWorldObjects(int canvasWidth, int canvasHeight, int wallWidth, int radius,
                                                       int distanceBetweenWalls, int xPadding, int yPadding) {
-        Log.d("WORLD_NUMBER", String.valueOf(worldNumber));
         switch (worldNumber) {
             case 1:
-                return createWorld1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
+                return createWorld1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
+                        xPadding, yPadding);
             case 2:
-                return createWorld2(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
+                return createWorld2(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
+                        xPadding, yPadding);
+            case 3:
+                return createWorld3(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
+                        xPadding, yPadding);
             default:
-                return createWorld1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
+                return createWorld1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
+                        xPadding, yPadding);
         }
     }
 
     /**
      * Creates world objects for world 1.
+     *
+     * Introduce user to goal.
      *
      * @param canvasWidth Width of canvas.
      * @param canvasHeight Height of canvas.
@@ -258,6 +265,8 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
     /**
      * Creates world objects for world 2.
      *
+     * Introduce user to walls.
+     *
      * @param canvasWidth Width of canvas.
      * @param canvasHeight Height of canvas.
      * @param wallWidth Width of walls.
@@ -273,18 +282,52 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
 
 
         // Walls for square in centre (l, t, r, b)
-        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls * 2, canvasHeight / 2 - yPadding / 2,
-                xPadding + distanceBetweenWalls * 2, canvasHeight / 2 + yPadding / 2, wallWidth));
+        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls, canvasHeight / 2 - yPadding / 2,
+                xPadding + distanceBetweenWalls, canvasHeight / 2 + yPadding / 2, wallWidth));
 
-        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls * 2, canvasHeight / 2 - yPadding / 2,
-                canvasWidth - xPadding - distanceBetweenWalls * 2, canvasHeight / 2 - yPadding / 2, wallWidth));
+        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls, canvasHeight / 2 - yPadding / 2,
+                canvasWidth - xPadding - distanceBetweenWalls, canvasHeight / 2 - yPadding / 2, wallWidth));
 
-        worldObjects.add(new WallObject(canvasWidth - xPadding - distanceBetweenWalls * 2,
-                canvasHeight / 2 - yPadding / 2, canvasWidth - xPadding - distanceBetweenWalls * 2,
+        worldObjects.add(new WallObject(canvasWidth - xPadding - distanceBetweenWalls,
+                canvasHeight / 2 - yPadding / 2, canvasWidth - xPadding - distanceBetweenWalls,
                 canvasHeight / 2 + yPadding / 2, wallWidth));
 
-        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls * 2, canvasHeight / 2 + yPadding / 2,
-                canvasWidth - xPadding - distanceBetweenWalls * 2, canvasHeight / 2 + yPadding / 2, wallWidth));
+        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls, canvasHeight / 2 + yPadding / 2,
+                canvasWidth - xPadding - distanceBetweenWalls, canvasHeight / 2 + yPadding / 2, wallWidth));
+
+
+        return worldObjects;
+    }
+
+    /**
+     * Creates world objects for world 3.
+     *
+     * Introduce user to holes.
+     *
+     * @param canvasWidth Width of canvas.
+     * @param canvasHeight Height of canvas.
+     * @param wallWidth Width of walls.
+     * @param radius Radius of marble.
+     * @param distanceBetweenWalls Minimum distance between walls.
+     * @param xPadding Padding around board in x plane.
+     * @param yPadding Padding around board in y plane.
+     * @return An array list of world objects.
+     */
+    private ArrayList<WorldObject> createWorld3(int canvasWidth, int canvasHeight, int wallWidth, int radius,
+                                                int distanceBetweenWalls, int xPadding, int yPadding) {
+        ArrayList<WorldObject> worldObjects = new ArrayList<>();
+
+
+        // Add 4 holes, diagonally across middle of area
+        worldObjects.add(new HoleObject(xPadding + distanceBetweenWalls / 2 + distanceBetweenWalls,
+                yPadding + distanceBetweenWalls / 2 + distanceBetweenWalls * 7, radius));
+        worldObjects.add(new HoleObject(xPadding + distanceBetweenWalls / 2 + distanceBetweenWalls * 2,
+                yPadding + distanceBetweenWalls / 2 + distanceBetweenWalls * 6, radius));
+        worldObjects.add(new HoleObject(xPadding + distanceBetweenWalls / 2 + distanceBetweenWalls * 3,
+                yPadding + distanceBetweenWalls / 2 + distanceBetweenWalls * 5, radius));
+        worldObjects.add(new HoleObject(xPadding + distanceBetweenWalls / 2 + distanceBetweenWalls * 4,
+                yPadding + distanceBetweenWalls / 2 + distanceBetweenWalls * 4, radius));
+
 
 
         return worldObjects;

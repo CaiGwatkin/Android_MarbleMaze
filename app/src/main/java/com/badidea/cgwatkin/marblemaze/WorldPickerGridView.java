@@ -66,5 +66,6 @@ public class WorldPickerGridView extends GridView {
     private void getWorlds() {
         mWorldList.add(R.string.world1);
         mWorldList.add(R.string.world2);
+        mWorldList.add(R.string.world3);
     }
 }
