@@ -15,8 +15,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Welcome Activity class
+ *
+ * Greets the user when they enter the app.
+ * Displays name, then opens world picker activity when screen touched.
  */
 public class WelcomeActivity extends Activity {
 
@@ -117,6 +119,7 @@ public class WelcomeActivity extends Activity {
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
 
         if (mNextWelcomeMessage < mWelcomeMessages.size()) {
+            // Cheesy messages
             final Integer duration = 1500;
             final AnimatorListenerAdapter listener = new AnimatorListenerAdapter() {
                         @Override
@@ -131,9 +134,17 @@ public class WelcomeActivity extends Activity {
             delayedNext(3000);
         }
         else if (mNextWelcomeMessage == mWelcomeMessages.size()) {
+            // App name
             final AnimatorListenerAdapter listener = new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    findViewById(R.id.welcome_main).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setContentView(R.layout.world_picker);
+                            ((WorldPickerGridView) findViewById(R.id.world_picker)).init();
+                        }
+                    });
                     findViewById(R.id.welcome_continue).animate()
                             .setInterpolator(interpolator)
                             .alpha(1f)
@@ -175,10 +186,10 @@ public class WelcomeActivity extends Activity {
      * @param event The touch event
      * @return true
      */
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        setContentView(R.layout.world_picker);
-        ((WorldPickerGridView) findViewById(R.id.world_picker)).init();
-        return true;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        setContentView(R.layout.world_picker);
+//        ((WorldPickerGridView) findViewById(R.id.world_picker)).init();
+//        return true;
+//    }
 }
