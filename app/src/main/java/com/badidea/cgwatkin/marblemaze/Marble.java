@@ -70,27 +70,33 @@ class Marble {
         double x = linearMovement(mX, mVX, dT);
         double y = linearMovement(mY, mVY, dT);
         if (!worldObjects.isEmpty()) {
+            boolean horizontalWallCollision = false, verticalWallCollision = false;
+            double xNext = x, yNext = y;
             for (WorldObject wo: worldObjects) {
                 if (wo.collision(x, y, mR, mVX, mVY)) {
                     if (wo.isGoal()) {
-                        updatePosition(x, y);
+                        updatePosition(xNext, yNext);
                         return HitType.GOAL;
                     } else if (wo.isHole()) {
-                        updatePosition(x, y);
+                        updatePosition(xNext, yNext);
                         return HitType.HOLE;
                     } else {
-                        if (((WallObject) wo).isHorizontal()) {
+                        if (!horizontalWallCollision && ((WallObject) wo).isHorizontal()) {
+                            horizontalWallCollision = true;
                             reverseVY();
                             y = linearMovement(mY, mVY, dT);
                         }
-                        else {
+                        else if (!verticalWallCollision) {
+                            verticalWallCollision = true;
                             reverseVX();
                             x = linearMovement(mX, mVX, dT);
                         }
-                        updatePosition(x, y);
-                        return HitType.WALL;
                     }
                 }
+            }
+            if (horizontalWallCollision || verticalWallCollision) {
+                updatePosition(x, y);
+                return HitType.WALL;
             }
         }
         boolean bc = false;
