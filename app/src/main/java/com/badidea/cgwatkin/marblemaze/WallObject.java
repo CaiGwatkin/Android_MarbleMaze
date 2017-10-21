@@ -34,7 +34,13 @@ class WallObject implements WorldObject {
      * @param p The paint.
      */
     public void draw(Canvas c, Paint p) {
-        c.drawLine(mX1, mY1, mX2, mY2, p);
+        int halfW = mW / 2;
+        if (isHorizontal()) {
+            c.drawLine(mX1 - halfW, mY1, mX2 + halfW, mY2, p);
+        }
+        else {
+            c.drawLine(mX1, mY1 - halfW, mX2, mY2 + halfW, p);
+        }
     }
 
     /**
