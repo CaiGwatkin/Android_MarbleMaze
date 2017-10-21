@@ -16,6 +16,8 @@ public class MarbleView extends View {
      */
     static int RADIUS = 40;
 
+    static int WALL_WIDTH = 8;
+
     /**
      * Context.
      */
@@ -87,7 +89,7 @@ public class MarbleView extends View {
 
         mPaintWall = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintWall.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.wall, null));
-        mPaintWall.setStrokeWidth(2);
+        mPaintWall.setStrokeWidth(WALL_WIDTH);
         mPaintWall.setStyle(Paint.Style.STROKE);
         mPaintWall.setAntiAlias(true);
 
@@ -107,9 +109,10 @@ public class MarbleView extends View {
      */
     public void createWorld() {
         mMarble = new Marble(getWidth() - RADIUS, getHeight() - RADIUS, 0, 0, RADIUS);
-        mWorldObjects.add(new WallObject(RADIUS * 2, getHeight() / 2, getWidth() - RADIUS, getHeight() / 2));
-//        mWorldObjects.add(new GoalObject(RADIUS, RADIUS, RADIUS));
-//        mWorldObjects.add(new HoleObject(getWidth() - RADIUS, RADIUS, RADIUS));
+        mWorldObjects.add(new WallObject(RADIUS * 2, getHeight() / 2, getWidth() - RADIUS * 2, getHeight() / 2,
+                WALL_WIDTH));
+        mWorldObjects.add(new GoalObject(RADIUS, RADIUS, RADIUS));
+        mWorldObjects.add(new HoleObject(getWidth() - RADIUS, RADIUS, RADIUS));
     }
 
     /**

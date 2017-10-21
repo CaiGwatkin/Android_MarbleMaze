@@ -2,16 +2,13 @@ package com.badidea.cgwatkin.marblemaze;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.util.Log;
 
 class WallObject implements WorldObject {
 
     /**
      * Line end coordinates.
      */
-    private int mX1, mY1, mX2, mY2;
+    private int mX1, mY1, mX2, mY2, mW;
 
     /**
      * Constructor
@@ -20,12 +17,14 @@ class WallObject implements WorldObject {
      * @param y1 Point 1 y coordinate.
      * @param x2 Point 2 x coordinate.
      * @param y2 Point 2 y coordinate.
+     * @param w Wall width in pixels.
      */
-    WallObject(int x1, int y1, int x2, int y2) {
+    WallObject(int x1, int y1, int x2, int y2, int w) {
         mX1 = x1;
         mY1 = y1;
         mX2 = x2;
         mY2 = y2;
+        mW = w;
     }
 
     /**
@@ -41,40 +40,43 @@ class WallObject implements WorldObject {
     /**
      * Tests if the marble collides with this object.
      *
-     * @param x Marble's centre's x coordinate.
-     * @param y Marble's centre's y coordinate.
-     * @param r Marble's radius.
-     * @param vX Marble's velocity in x plane.
-     * @param vY Marble's velocity in y plane.
+     * @param cX Marble's centre's x coordinate.
+     * @param cY Marble's centre's y coordinate.
+     * @param cR Marble's radius.
+     * @param cVX Marble's velocity in x plane.
+     * @param cVY Marble's velocity in y plane.
      * @return True if collision occurred.
      */
-    public boolean collision(double x, double y, double r, double vX, double vY) {
-        return lineCircle(mX1, mY1, mX2, mY2, x, y, r);
-//        r = r - 0.1;
-//        if (isHorizontal()) {
-//            // Horizontal
-//            if (vY > 0 && y < mY1) {
-//                // Increasing y
-//                return y > mY1 - r && x >= mX1 && x <= mX2;
-//            }
-//            else if (y > mY1) {
-//                // Increasing x
-//                return y < mY1 + r && x >= mX1 && x <= mX2;
-//            }
-//            return false;
-//        }
-//        else {
-//            // Vertical
-//            if (vX > 0 && x < mX1) {
-//                // Increasing y
-//                return x > mX1 - r && y >= mY1 && y <= mY2;
-//            }
-//            else if (x > mX1) {
-//                // Increasing x
-//                return x < mX1 + r && y >= mY1 && y <= mY2;
-//            }
-//            return false;
-//        }
+    public boolean collision(double cX, double cY, double cR, double cVX, double cVY) {
+//        return lineCircle(mX1, mY1, mX2, mY2, x, y, r);
+        if (endPointCollision(mX1, mY1, cX, cY, cR) || endPointCollision(mX2, mY2, cX, cY, cR)) {
+            return true;
+        }
+        cR = cR - 0.1;    // buffer
+        if (isHorizontal()) {
+            // Horizontal
+            if (cVY > 0 && cY < mY1) {
+                // Increasing y
+                return cY > mY1 - mW / 2 - cR && cX >= mX1 && cX <= mX2;
+            }
+            else if (cY > mY1) {
+                // Increasing x
+                return cY < mY1 + mW / 2 + cR && cX >= mX1 && cX <= mX2;
+            }
+            return false;
+        }
+        else {
+            // Vertical
+            if (cVX > 0 && cX < mX1) {
+                // Increasing y
+                return cX > mX1 - mW / 2 - cR && cY >= mY1 && cY <= mY2;
+            }
+            else if (cX > mX1) {
+                // Increasing x
+                return cX < mX1 + mW / 2 + cR && cY >= mY1 && cY <= mY2;
+            }
+            return false;
+        }
     }
 
     /**
@@ -113,76 +115,20 @@ class WallObject implements WorldObject {
         return mY1 == mY2;
     }
 
-    /* *****************************************************************************************************************
-     * Following sampled from http://www.jeffreythompson.org/collision-detection/line-circle.php
+    /**
+     * Returns true if collision on end-point.
+     *
+     * @param pX End point's x coordinate.
+     * @param pY End point's y coordinate.
+     * @param cX Circle's x coordinate.
+     * @param cY Circle's y coordinate.
+     * @param cR Circle's radius.
+     * @return true if collision
      */
-    // LINE/CIRCLE
-    private boolean lineCircle(double x1, double y1, double x2, double y2, double cx, double cy, double r) {
-
-        // is either end INSIDE the circle?
-        // if so, return true immediately
-        if (pointCircle(x1, y1, cx, cy, r) || pointCircle(x2, y2, cx, cy, r)) {
-            return true;
-        }
-
-        // get length of the line
-        double len = distance(x1, y1, x2, y2);
-
-        // get dot product of the line and circle
-        double dot = ( ((cx - x1) * (x2 - x1)) + ((cy - y1) * (y2 - y1)) ) / Math.pow(len, 2);
-
-        // find the closest point on the line
-        double closestX = x1 + (dot * (x2 - x1));
-        double closestY = y1 + (dot * (y2 - y1));
-
-        // is this point actually on the line segment?
-        // if so keep going, but if not, return false
-        boolean onSegment = linePoint(x1, y1, x2, y2, closestX, closestY);
-        if (!onSegment) {
-            return false;
-        }
-
-        // get distance to closest point
-        double distance = distance(closestX, closestY, cx, cy);
-        return distance <= r;
+    private boolean endPointCollision(double pX, double pY, double cX, double cY, double cR) {
+        double d = distance(pX, pY, cX, cY);
+        return d <= cR;
     }
-
-
-    // POINT/CIRCLE
-    private boolean pointCircle(double px, double py, double cx, double cy, double r) {
-
-        // get distance between the point and circle's center
-        double distance = distance(px, py, cx, cy);
-
-        // if the distance is less than the circle's
-        // radius the point is inside!
-        return distance <= r;
-    }
-
-
-    // LINE/POINT
-    private boolean linePoint(double x1, double y1, double x2, double y2, double px, double py) {
-
-        // get distance from the point to the two ends of the line
-        double d1 = distance(px, py, x1, y1);
-        double d2 = distance(px, py, x2, y2);
-
-        // get the length of the line
-        double lineLen = distance(x1, y1, x2, y2);
-
-        // since doubles are so minutely accurate, add
-        // a little buffer zone that will give collision
-        double buffer = 0.1;    // higher # = less accurate
-
-        // if the two distances are equal to the line's
-        // length, the point is on the line!
-        // note we use the buffer here to give a range,
-        // rather than one #
-        return (d1 + d2 >= lineLen - buffer && d1 + d2 <= lineLen + buffer);
-    }
-    /* *****************************************************************************************************************
-     * End sample
-     */
 
     /**
      * Returns the distance between two points.

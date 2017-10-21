@@ -69,23 +69,22 @@ class Marble {
         if (!worldObjects.isEmpty()) {
             for (WorldObject wo: worldObjects) {
                 if (wo.collision(x, y, mR, mVX, mVY)) {
-                    mX = x;
-                    mY = y;
                     if (wo.isGoal()) {
+                        updatePosition(x, y);
                         return HitType.TARGET;
                     } else if (wo.isHole()) {
+                        updatePosition(x, y);
                         return HitType.HOLE;
                     } else {
                         if (((WallObject) wo).isHorizontal()) {
                             reverseVY();
+                            y = linearMovement(mY, mVY, dT);
                         }
                         else {
                             reverseVX();
+                            x = linearMovement(mX, mVX, dT);
                         }
-                        x = linearMovement(mX, mVX, dT);
-                        y = linearMovement(mY, mVY, dT);
-                        mX = x;
-                        mY = y;
+                        updatePosition(x, y);
                         return HitType.WALL;
                     }
                 }
@@ -102,13 +101,10 @@ class Marble {
             y = linearMovement(mY, mVY, dT);
             bc = true;
         }
+        updatePosition(x, y);
         if (bc) {
-            mX = x;
-            mY = y;
             return HitType.BOUNDARY;
         }
-        mX = x;
-        mY = y;
         return HitType.NONE;
     }
 
@@ -126,13 +122,18 @@ class Marble {
         mVY = -mVY * k;
     }
 
+    private void updatePosition(double x, double y) {
+        mX = x;
+        mY = y;
+    }
+
     /**
      * Reverse velocity in both x and y planes.
      */
-    private void bounce() {
-        reverseVX();
-        reverseVY();
-    }
+//    private void bounce() {
+//        reverseVX();
+//        reverseVY();
+//    }
 
     /**
      * Calculate next linear position.
