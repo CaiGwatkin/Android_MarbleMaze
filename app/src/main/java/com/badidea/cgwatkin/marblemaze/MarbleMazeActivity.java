@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Marble Maze Activity class
  */
@@ -72,7 +74,7 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSuccessFailureDisplay = (LinearLayout) findViewById(R.id.success_failure_display);
         mMarbleView = (MarbleView) findViewById(R.id.marble_view);
-        mMarbleView.setSuccessObserver(new SuccessObserver() {
+        mMarbleView.setSuccessObserver(new Observer() {
             @Override
             public void success() {
                 doSuccessFailure(ActionType.SUCCESS);
@@ -81,6 +83,14 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
             @Override
             public void failure() {
                 doSuccessFailure(ActionType.FAILURE);
+            }
+
+            @Override
+            public ArrayList<WorldObject> createWorldObjects(int canvasWidth, int canvasHeight, int wallWidth,
+                                                             int radius, int distanceBetweenWalls, int xPadding,
+                                                             int yPadding) {
+                return doCreateWorldObjects(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
+                        xPadding, yPadding);
             }
         });
         mRefresh = new RefreshWorld(mMarbleView, mHandler);
@@ -178,5 +188,24 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         mMarbleView.setOnClickListener(null);
         mRefresh.unPause();
         mHandler.post(mRefresh.setStartTime(System.currentTimeMillis()));
+    }
+
+    /**
+     * Creates world with marble, objects, target and hole.
+     */
+    private ArrayList<WorldObject> doCreateWorldObjects(int canvasWidth, int canvasHeight, int wallWidth, int radius,
+                                                        int distanceBetweenWalls, int xPadding, int yPadding) {
+        ArrayList<WorldObject> worldObjects = new ArrayList<>();
+        for (int i = xPadding; i < canvasWidth; i += distanceBetweenWalls) {
+            worldObjects.add(new WallObject(i, yPadding, i, canvasHeight - yPadding, wallWidth));
+        }
+        for (int i = yPadding; i < canvasHeight; i += distanceBetweenWalls) {
+            worldObjects.add(new WallObject(xPadding, i, canvasWidth - xPadding, i, wallWidth));
+        }
+        worldObjects.add(new GoalObject(xPadding + distanceBetweenWalls / 2,
+                yPadding + distanceBetweenWalls / 2, radius));
+        worldObjects.add(new HoleObject(canvasWidth - xPadding - distanceBetweenWalls / 2,
+                yPadding + distanceBetweenWalls / 2, radius));
+        return worldObjects;
     }
 }

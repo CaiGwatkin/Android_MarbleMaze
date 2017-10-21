@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 public class MarbleView extends View {
 
-
     private int wallWidth;
 
     private int canvasWidth, canvasHeight;
@@ -23,9 +22,9 @@ public class MarbleView extends View {
     private Context mContext;
 
     /**
-     * SuccessObserver, for callback to activity.
+     * Observer, for callback to activity.
      */
-    private SuccessObserver mSuccessObserver;
+    private Observer mObserver;
 
     /**
      * The paint objects to colour etc. the marble.
@@ -56,7 +55,6 @@ public class MarbleView extends View {
     public MarbleView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        mWorldObjects = new ArrayList<>();
         this.post(new Runnable() {
             @Override
             public void run() {
@@ -70,8 +68,8 @@ public class MarbleView extends View {
      *
      * @param observer The observer.
      */
-    public void setSuccessObserver(SuccessObserver observer){
-        mSuccessObserver = observer;
+    public void setSuccessObserver(Observer observer){
+        mObserver = observer;
     }
 
     /**
@@ -117,18 +115,8 @@ public class MarbleView extends View {
 
         mMarble = new Marble(canvasWidth - xPadding - distanceBetweenWalls / 2,
                 canvasHeight - yPadding - distanceBetweenWalls / 2, mGX, mGY, radius, maxVelocity);
-        for (int i = xPadding; i < canvasWidth; i += distanceBetweenWalls) {
-            mWorldObjects.add(new WallObject(i, yPadding,
-                    i, canvasHeight - yPadding, wallWidth));
-        }
-        for (int i = yPadding; i < canvasHeight; i += distanceBetweenWalls) {
-            mWorldObjects.add(new WallObject(xPadding, i,
-                    canvasWidth - xPadding, i, wallWidth));
-        }
-        mWorldObjects.add(new GoalObject(xPadding + distanceBetweenWalls / 2,
-                yPadding + distanceBetweenWalls / 2, radius));
-        mWorldObjects.add(new HoleObject(canvasWidth - xPadding - distanceBetweenWalls / 2,
-                yPadding + distanceBetweenWalls / 2, radius));
+        mWorldObjects = mObserver.createWorldObjects(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
+                xPadding, yPadding);
         setPaint();
     }
 
@@ -195,8 +183,8 @@ public class MarbleView extends View {
      * Goal has been collided with.
      */
     private void success() {
-        if (mSuccessObserver != null) {
-            mSuccessObserver.success();
+        if (mObserver != null) {
+            mObserver.success();
         }
         else {
             ((Activity) getContext()).finish();
@@ -207,8 +195,8 @@ public class MarbleView extends View {
      * Hole has been collided with.
      */
     private void failure() {
-        if (mSuccessObserver != null) {
-            mSuccessObserver.failure();
+        if (mObserver != null) {
+            mObserver.failure();
         }
         else {
             ((Activity) getContext()).finish();
