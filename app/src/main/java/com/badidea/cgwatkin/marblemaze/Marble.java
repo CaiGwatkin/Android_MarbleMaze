@@ -11,15 +11,16 @@ import java.util.ArrayList;
  * The main object in the world, which the user controls.
  */
 class Marble {
+
     /**
      * The marble's position, radius and velocity values.
      */
-    private float mX, mY, mR, mVX, mVY;
+    private double mX, mY, mR, mVX, mVY, mMaxVelocity;
 
     /**
      * Velocity modifier on collision.
      */
-    private float k = 0.3f;
+    private double k = 0.3;
 
     /**
      * Marble constructor
@@ -29,13 +30,15 @@ class Marble {
      * @param vX Velocity in x plane.
      * @param vY Velocity in y plane.
      * @param r Radius.
+     * @param maxVelocity Maximum velocity in any plane.
      */
-    Marble(int x, int y, float vX, float vY, float r) {
+    Marble(int x, int y, double vX, double vY, double r, double maxVelocity) {
         mX = x;
         mY = y;
         mR = r;
         mVX = vX;
         mVY = vY;
+        mMaxVelocity = maxVelocity;
     }
 
     /**
@@ -46,8 +49,8 @@ class Marble {
      */
     void draw(Canvas c, Paint p) {
         c.save();
-        c.translate(mX, mY);
-        c.drawCircle(0, 0, mR, p);
+        c.translate((float) mX, (float) mY);
+        c.drawCircle(0, 0, (float) mR, p);
         c.restore();
     }
 
@@ -61,77 +64,56 @@ class Marble {
      * @param h Height of canvas.
      * @return Type of hit.
      */
-    HitType move(float dT, float gX, float gY, float w, float h, ArrayList<WorldObject> worldObjects) {
+    HitType move(double dT, double gX, double gY, double w, double h, ArrayList<WorldObject> worldObjects) {
         mVX = updateVelocity(mVX, dT, gX);
         mVY = updateVelocity(mVY, dT, gY);
-        float x = linearMovement(mX, mVX, dT);
-        float y = linearMovement(mY, mVY, dT);
+        double x = linearMovement(mX, mVX, dT);
+        double y = linearMovement(mY, mVY, dT);
         if (!worldObjects.isEmpty()) {
+            boolean horizontalWallCollision = false, verticalWallCollision = false;
+            double xNext = x, yNext = y;
             for (WorldObject wo: worldObjects) {
-                if (wo.collision(x, y, mR)) {
-                    mX = x;
-                    mY = y;
+                if (wo.collision(x, y, mR, mVX, mVY)) {
                     if (wo.isGoal()) {
-                        return HitType.TARGET;
+                        updatePosition(xNext, yNext);
+                        return HitType.GOAL;
                     } else if (wo.isHole()) {
+                        updatePosition(xNext, yNext);
                         return HitType.HOLE;
                     } else {
-                        switch (wo.side(x, y, mR)) {
-                            case LEFT:
-                                reverseVX();
-                                break;
-                            case TOP_LEFT:
-                                bounce();
-                                break;
-                            case TOP:
-                                reverseVY();
-                                break;
-                            case TOP_RIGHT:
-                                bounce();
-                                break;
-                            case RIGHT:
-                                reverseVX();
-                                break;
-                            case BOTTOM_RIGHT:
-                                bounce();
-                                break;
-                            case BOTTOM:
-                                reverseVY();
-                                break;
-                            case BOTTOM_LEFT:
-                                bounce();
-                                break;
-                            default:
-                                bounce();
-                                break;
+                        if (!horizontalWallCollision && ((WallObject) wo).isHorizontal()) {
+                            horizontalWallCollision = true;
+                            reverseVY();
+                            y = linearMovement(mY, mVY, dT);
                         }
-                        x = linearMovement(mX, mVX, dT);
-                        y = linearMovement(mY, mVY, dT);
-                        mX = x;
-                        mY = y;
-                        return HitType.OBJECT;
+                        else if (!verticalWallCollision) {
+                            verticalWallCollision = true;
+                            reverseVX();
+                            x = linearMovement(mX, mVX, dT);
+                        }
                     }
                 }
+            }
+            if (horizontalWallCollision || verticalWallCollision) {
+                updatePosition(x, y);
+                return HitType.WALL;
             }
         }
         boolean bc = false;
         if (boundaryCollision(x, w)) {
-            mVX = -mVX * k;
+            reverseVX();
             x = linearMovement(mX, mVX, dT);
             bc = true;
         }
         if (boundaryCollision(y, h)) {
-            mVY = -mVY * k;
+            reverseVY();
             y = linearMovement(mY, mVY, dT);
             bc = true;
         }
+        updatePosition(x, y);
         if (bc) {
-            mX = x;
-            mY = y;
             return HitType.BOUNDARY;
         }
-        mX = x;
-        mY = y;
         return HitType.NONE;
     }
 
@@ -149,13 +131,18 @@ class Marble {
         mVY = -mVY * k;
     }
 
+    private void updatePosition(double x, double y) {
+        mX = x;
+        mY = y;
+    }
+
     /**
      * Reverse velocity in both x and y planes.
      */
-    private void bounce() {
-        mVX = -mVX * k;
-        mVY = -mVY * k;
-    }
+//    private void bounce() {
+//        reverseVX();
+//        reverseVY();
+//    }
 
     /**
      * Calculate next linear position.
@@ -165,8 +152,8 @@ class Marble {
      * @param dT The time difference.
      * @return The new coordinate.
      */
-    private float linearMovement(float coordinate, float v, float dT) {
-        return coordinate + (v * dT * 100);
+    private double linearMovement(double coordinate, double v, double dT) {
+        return coordinate + Math.min((v * dT * 100), mMaxVelocity);
     }
 
     /**
@@ -177,7 +164,7 @@ class Marble {
      * @param g The gravity modifier.
      * @return The new velocity.
      */
-    private float updateVelocity(float v, float dT, float g) {
+    private double updateVelocity(double v, double dT, double g) {
         return v + (dT * g * 10);
     }
 
@@ -188,7 +175,7 @@ class Marble {
      * @param boundary The boundary value.
      * @return True if boundary collision occurred.
      */
-    private boolean boundaryCollision(float coordinate, float boundary) {
+    private boolean boundaryCollision(double coordinate, double boundary) {
         return coordinate < mR || coordinate > boundary - mR;
     }
 }
@@ -199,7 +186,7 @@ class Marble {
 enum HitType {
     NONE,
     BOUNDARY,
-    OBJECT,
-    TARGET,
+    WALL,
+    GOAL,
     HOLE
 }

@@ -19,7 +19,10 @@ import android.widget.TextView;
  */
 public class MarbleMazeActivity extends Activity implements SensorEventListener {
 
-    enum Action {
+    /**
+     * ActionType type.
+     */
+    private enum ActionType {
         SUCCESS,
         FAILURE
     }
@@ -72,12 +75,12 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         mMarbleView.setSuccessObserver(new SuccessObserver() {
             @Override
             public void success() {
-                doSuccessFailure(Action.SUCCESS);
+                doSuccessFailure(ActionType.SUCCESS);
             }
 
             @Override
             public void failure() {
-                doSuccessFailure(Action.FAILURE);
+                doSuccessFailure(ActionType.FAILURE);
             }
         });
         mRefresh = new RefreshWorld(mMarbleView, mHandler);
@@ -137,13 +140,13 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
      *
      * @param action Success or failure.
      */
-    private void doSuccessFailure(Action action) {
+    private void doSuccessFailure(ActionType action) {
         mRefresh.pause();
         mHandler.removeCallbacks(mRefresh);
         View successFailureLayout = LayoutInflater.from(this).inflate(R.layout.success_failure, mSuccessFailureDisplay,
                 false);
         int messageResource;
-        if (action == Action.SUCCESS) {
+        if (action == ActionType.SUCCESS) {
             messageResource = R.string.success;
             mMarbleView.setOnClickListener(new View.OnClickListener() {
                 @Override

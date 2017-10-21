@@ -8,22 +8,7 @@ import android.graphics.Paint;
  *
  * Extended from to create world objects.
  */
-abstract class WorldObject {
-    /**
-     * The object's position.
-     */
-    int mX, mY;
-
-    /**
-     * WorldObject constructor
-     *
-     * @param x Position in x plane (top left if object.
-     * @param y Position in y plane.
-     */
-    WorldObject(int x, int y) {
-        mX = x;
-        mY = y;
-    }
+interface WorldObject {
 
     /**
      * Draws object on view.
@@ -31,7 +16,7 @@ abstract class WorldObject {
      * @param c The canvas.
      * @param p The paint.
      */
-    abstract void draw(Canvas c, Paint p);
+    void draw(Canvas c, Paint p);
 
     /**
      * Tests if the marble collides with this object.
@@ -39,53 +24,30 @@ abstract class WorldObject {
      * @param x Marble's centre's x coordinate.
      * @param y Marble's centre's y coordinate.
      * @param r Marble's radius.
+     * @param vX Marble's velocity in x plane.
+     * @param vY Marble's velocity in y plane.
      * @return True if collision occurred.
      */
-    abstract public boolean collision(float x, float y, float r);
-
-    /**
-     * Finds to which side of this object the marble is.
-     *
-     * @param x Marble's centre's x coordinate.
-     * @param y Marble's centre's y coordinate.
-     * @param r Marble's radius.
-     * @return The CollisionSide of this object the marble is on.
-     */
-    abstract public CollisionSide side(float x, float y, float r);
+    boolean collision(double x, double y, double r, double vX, double vY);
 
     /**
      * Returns true if object is goal.
      *
      * @return True if object is goal.
      */
-    abstract public boolean isGoal();
+    boolean isGoal();
 
     /**
      * Returns true if object is hole.
      *
      * @return True if object is hole.
      */
-    abstract public boolean isHole();
+    boolean isHole();
 
     /**
      * Returns true if object is object.
      *
      * @return True if object is object.
      */
-    abstract public boolean isObject();
-}
-
-/**
- * The different sides of an object the marble can be on.
- */
-enum CollisionSide {
-    NONE,
-    LEFT,
-    TOP_LEFT,
-    TOP,
-    TOP_RIGHT,
-    RIGHT,
-    BOTTOM_RIGHT,
-    BOTTOM,
-    BOTTOM_LEFT
+    boolean isWall();
 }
