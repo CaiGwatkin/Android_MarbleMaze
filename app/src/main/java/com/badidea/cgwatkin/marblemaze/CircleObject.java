@@ -3,6 +3,13 @@ package com.badidea.cgwatkin.marblemaze;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+/**
+ * Circle Object abstract class
+ *
+ * For extending from to create circular world objects.
+ *
+ * Implements World Object interface.
+ */
 abstract class CircleObject implements WorldObject {
 
     /**
@@ -21,18 +28,6 @@ abstract class CircleObject implements WorldObject {
         mX = x;
         mY = y;
         mR = r;
-    }
-
-    public int getX() {
-        return mX;
-    }
-
-    public int getY() {
-        return mY;
-    }
-
-    public int getR() {
-        return mR;
     }
 
     /**

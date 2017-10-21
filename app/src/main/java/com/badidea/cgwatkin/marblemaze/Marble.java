@@ -2,13 +2,12 @@ package com.badidea.cgwatkin.marblemaze;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-
 import java.util.ArrayList;
 
 /**
  * Marble class
  *
- * The main object in the world, which the user controls.
+ * The main object in the world, which the user controls through accelerometer.
  */
 class Marble {
 
@@ -139,10 +138,10 @@ class Marble {
     /**
      * Reverse velocity in both x and y planes.
      */
-//    private void bounce() {
-//        reverseVX();
-//        reverseVY();
-//    }
+    private void bounce() {
+        reverseVX();
+        reverseVY();
+    }
 
     /**
      * Calculate next linear position.

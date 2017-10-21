@@ -1,5 +1,13 @@
 package com.badidea.cgwatkin.marblemaze;
 
+/**
+ * Hole Object class
+ *
+ * For holes in the world.
+ * User fails if marble collides with this.
+ *
+ * Extends Circle Object, which implements World Object interface.
+ */
 class HoleObject extends CircleObject {
 
     /**

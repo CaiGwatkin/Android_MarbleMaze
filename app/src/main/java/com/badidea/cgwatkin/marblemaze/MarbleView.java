@@ -10,11 +10,24 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+/**
+ * Marble View class
+ *
+ * Contains canvas in which game is rendered.
+ * Creates and manages world objects.
+ * Updates marble position.
+ */
 public class MarbleView extends View {
 
-    private int wallWidth;
-
+    /**
+     * Canvas dimensions
+     */
     private int canvasWidth, canvasHeight;
+
+    /**
+     * The width of walls, based on paint stroke width.
+     */
+    private int wallWidth;
 
     /**
      * Context.

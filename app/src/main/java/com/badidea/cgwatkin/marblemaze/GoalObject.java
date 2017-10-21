@@ -1,5 +1,13 @@
 package com.badidea.cgwatkin.marblemaze;
 
+/**
+ * Goal Object class
+ *
+ * For goals in the world.
+ * User succeeds if marble collides with this.
+ *
+ * Extends Circle Object, which implements World Object interface.
+ */
 class GoalObject extends CircleObject {
 
     /**

@@ -8,7 +8,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,6 +18,8 @@ import java.util.ArrayList;
 
 /**
  * Marble Maze Activity class
+ *
+ * Handles the Marble View creation and updating, including world creation.
  */
 public class MarbleMazeActivity extends Activity implements SensorEventListener {
 
@@ -30,6 +31,9 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         FAILURE
     }
 
+    /**
+     * Stores the current world number.
+     */
     private int worldNumber;
 
     /**
@@ -93,12 +97,12 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         mMarbleView.setSuccessObserver(new Observer() {
             @Override
             public void success() {
-                doSuccessFailure(ActionType.SUCCESS);
+                successFailureAction(ActionType.SUCCESS);
             }
 
             @Override
             public void failure() {
-                doSuccessFailure(ActionType.FAILURE);
+                successFailureAction(ActionType.FAILURE);
             }
 
             @Override
@@ -179,7 +183,7 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
      *
      * @param action Success or failure.
      */
-    private void doSuccessFailure(ActionType action) {
+    private void successFailureAction(ActionType action) {
         mRefresh.pause();
         mHandler.removeCallbacks(mRefresh);
         View successFailureLayout = LayoutInflater.from(this).inflate(R.layout.success_failure, mSuccessFailureDisplay,

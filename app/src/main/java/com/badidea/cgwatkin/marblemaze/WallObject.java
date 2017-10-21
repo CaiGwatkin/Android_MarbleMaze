@@ -3,6 +3,14 @@ package com.badidea.cgwatkin.marblemaze;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+/**
+ * Wall Object class
+ *
+ * For walls in the world.
+ * Marble cannot pass through these.
+ *
+ * Implements World Object interface.
+ */
 class WallObject implements WorldObject {
 
     /**
@@ -54,7 +62,6 @@ class WallObject implements WorldObject {
      * @return True if collision occurred.
      */
     public boolean collision(double cX, double cY, double cR, double cVX, double cVY) {
-//        return lineCircle(mX1, mY1, mX2, mY2, x, y, r);
         if (endPointCollision(mX1, mY1, cX, cY, cR) || endPointCollision(mX2, mY2, cX, cY, cR)) {
             return true;
         }

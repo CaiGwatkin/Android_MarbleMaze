@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Observer interface
  *
- * Used in custom view to callback to activity.
+ * Used in Marble View to callback to activity.
  */
 interface Observer {
     void success();

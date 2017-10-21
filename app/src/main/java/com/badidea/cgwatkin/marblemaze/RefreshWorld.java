@@ -5,9 +5,10 @@ import android.os.Handler;
 /**
  * Refresh World class
  *
- * Refreshes game world until stopped.
+ * Refreshes game world until paused.
  */
 class RefreshWorld implements Runnable {
+
     /**
      * The refresh rate/delay values.
      */
@@ -17,7 +18,7 @@ class RefreshWorld implements Runnable {
     /**
      * Marble world view to be refreshed.
      */
-    private MarbleView mWorldView;
+    private MarbleView mMarbleView;
 
     /**
      * Thread handler allow screen refresh after set delay.
@@ -35,24 +36,28 @@ class RefreshWorld implements Runnable {
     private long mStartTime;
 
     /**
-     * Refresh World constructor.
+     * Constructor.
      *
      * @param marbleView The world to refresh.
      * @param handler The thread handler to post to.
      */
     RefreshWorld(MarbleView marbleView, Handler handler) {
-        mWorldView = marbleView;
+        mMarbleView = marbleView;
         mHandler = handler;
         paused = true;
     }
 
+    /**
+     * Update Marble View, redraw.
+     * Recursive.
+     */
     @Override
     public void run() {
         if (!paused) {
             long dT = System.currentTimeMillis() - mStartTime;
             mStartTime = System.currentTimeMillis();
-            mWorldView.update(dT / 1000f);
-            mWorldView.postInvalidate();
+            mMarbleView.update(dT / 1000f);
+            mMarbleView.postInvalidate();
             long timeTaken = System.currentTimeMillis() - mStartTime;
             mHandler.postDelayed(this, REFRESH_DELAY - timeTaken);
         }

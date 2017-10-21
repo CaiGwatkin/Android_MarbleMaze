@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -119,7 +118,7 @@ public class WelcomeActivity extends Activity {
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
 
         if (mNextWelcomeMessage < mWelcomeMessages.size()) {
-            // Cheesy messages
+            // Cheesy messages.
             final Integer duration = 1500;
             final AnimatorListenerAdapter listener = new AnimatorListenerAdapter() {
                         @Override
@@ -134,10 +133,11 @@ public class WelcomeActivity extends Activity {
             delayedNext(3000);
         }
         else if (mNextWelcomeMessage == mWelcomeMessages.size()) {
-            // App name
+            // Show app name.
             final AnimatorListenerAdapter listener = new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    // Allow click to continue.
                     findViewById(R.id.welcome_main).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -145,6 +145,7 @@ public class WelcomeActivity extends Activity {
                             ((WorldPickerGridView) findViewById(R.id.world_picker)).init();
                         }
                     });
+                    // Show click to continue.
                     findViewById(R.id.welcome_continue).animate()
                             .setInterpolator(interpolator)
                             .alpha(1f)
@@ -179,17 +180,4 @@ public class WelcomeActivity extends Activity {
                 .setDuration(duration)
                 .setListener(listener);
     }
-
-    /**
-     * Start app when touch event occurs.
-     *
-     * @param event The touch event
-     * @return true
-     */
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        setContentView(R.layout.world_picker);
-//        ((WorldPickerGridView) findViewById(R.id.world_picker)).init();
-//        return true;
-//    }
 }
