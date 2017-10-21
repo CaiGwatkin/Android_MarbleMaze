@@ -29,10 +29,12 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         FAILURE
     }
 
+    private int worldNumber;
+
     /**
      * Thread handler allow screen refresh after set delay.
      */
-    private final Handler mHandler = new Handler();
+    private Handler mHandler = new Handler();
 
     /**
      * The refresh runnable. Updates the view every refresh delay and forces view refresh.
@@ -67,6 +69,19 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                worldNumber = 1;
+            }
+            else {
+                worldNumber = extras.getInt("WORLD_NUMBER");
+            }
+        }
+        else {
+            worldNumber = savedInstanceState.getInt("WORLD_NUMBER");
+        }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_marble_maze);
@@ -124,6 +139,13 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
         mSensorManager.unregisterListener(this);
         mHandler.removeCallbacks(mRefresh);
         mRefresh.pause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putInt("WORLD_NUMBER", worldNumber);
     }
 
     /**
@@ -191,10 +213,41 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
     }
 
     /**
-     * Creates world with marble, objects, target and hole.
+     * Returns world objects based on world number.
+     *
+     * @param canvasWidth Width of canvas.
+     * @param canvasHeight Height of canvas.
+     * @param wallWidth Width of walls.
+     * @param radius Radius of marble.
+     * @param distanceBetweenWalls Minimum distance between walls.
+     * @param xPadding Padding around board in x plane.
+     * @param yPadding Padding around board in y plane.
+     * @return An array list of world objects.
      */
     private ArrayList<WorldObject> doCreateWorldObjects(int canvasWidth, int canvasHeight, int wallWidth, int radius,
                                                         int distanceBetweenWalls, int xPadding, int yPadding) {
+        switch (worldNumber) {
+            case 1:
+                return World1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
+            default:
+                return World1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
+        }
+    }
+
+    /**
+     *
+     *
+     * @param canvasWidth Width of canvas.
+     * @param canvasHeight Height of canvas.
+     * @param wallWidth Width of walls.
+     * @param radius Radius of marble.
+     * @param distanceBetweenWalls Minimum distance between walls.
+     * @param xPadding Padding around board in x plane.
+     * @param yPadding Padding around board in y plane.
+     * @return An array list of world objects.
+     */
+    private ArrayList<WorldObject> World1(int canvasWidth, int canvasHeight, int wallWidth, int radius,
+                                          int distanceBetweenWalls, int xPadding, int yPadding) {
         ArrayList<WorldObject> worldObjects = new ArrayList<>();
         for (int i = xPadding; i < canvasWidth; i += distanceBetweenWalls) {
             worldObjects.add(new WallObject(i, yPadding, i, canvasHeight - yPadding, wallWidth));

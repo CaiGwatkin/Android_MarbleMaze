@@ -56,7 +56,7 @@ public class WorldPickerGridView extends GridView {
     private void startWorld(int position) {
         Context c = getContext();
         Intent intent = new Intent(c, MarbleMazeActivity.class);
-//        intent.putExtra("path", mImagePaths.get(position));
+        intent.putExtra("WORLD_NUMBER", mWorldList.get(position));
         c.startActivity(intent);
     }
 
@@ -65,47 +65,5 @@ public class WorldPickerGridView extends GridView {
      */
     private void getWorlds() {
         mWorldList.add(R.string.world1);
-//        final String[] columns = new String[]{ MediaStore.Images.Media.DATA };
-//        final String orderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
-//        Thread thread = new Thread(new Runnable() {
-//            /**
-//             * Attempts to load images.
-//             */
-//            @Override
-//            public void run() {
-//                try {
-//                    loadImages();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            /**
-//             * Loads images from device folders.
-//             *
-//             * Stores image paths. Creates and stores thumbnails.
-//             */
-//            private void loadImages() {
-//                Cursor cursor = getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                        columns, null, null, orderBy);
-//                int length = cursor.getCount();
-//                for (int i = 0; i < length; i++) {
-//                    cursor.moveToPosition(i);
-//                    int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-//                    String path = cursor.getString(dataColumnIndex);
-//                    mImagePaths.add(i, path);
-//                    mWorldList.add();
-//                    mAdapter.notifyDataSetChanged();
-//                }
-//                cursor.close();
-//            }
-//        });
-//        thread.start();
-//        try {
-//            thread.join();
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 }
