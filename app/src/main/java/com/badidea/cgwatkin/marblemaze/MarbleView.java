@@ -11,12 +11,11 @@ import android.view.View;
 import java.util.ArrayList;
 
 public class MarbleView extends View {
-    /**
-     * The radius of the marble to be displayed.
-     */
-    static int RADIUS = 40;
 
-    static int WALL_WIDTH = 8;
+
+    private int wallWidth;
+
+    private int canvasWidth, canvasHeight;
 
     /**
      * Context.
@@ -36,7 +35,7 @@ public class MarbleView extends View {
     /**
      * Gravity values.
      */
-    private double mGX, mGY;
+    private double mGX = 0, mGY = 9.8;
 
     /**
      * The marble being displayed.
@@ -57,10 +56,7 @@ public class MarbleView extends View {
     public MarbleView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        mGX = 0;
-        mGY = 9.8f;
         mWorldObjects = new ArrayList<>();
-        setPaint();
         this.post(new Runnable() {
             @Override
             public void run() {
@@ -89,7 +85,7 @@ public class MarbleView extends View {
 
         mPaintWall = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintWall.setColor(ResourcesCompat.getColor(mContext.getResources(), R.color.wall, null));
-        mPaintWall.setStrokeWidth(WALL_WIDTH);
+        mPaintWall.setStrokeWidth(wallWidth);
         mPaintWall.setStyle(Paint.Style.STROKE);
         mPaintWall.setAntiAlias(true);
 
@@ -108,11 +104,32 @@ public class MarbleView extends View {
      * Creates world with marble, objects, target and hole.
      */
     public void createWorld() {
-        mMarble = new Marble(getWidth() - RADIUS, getHeight() - RADIUS, 0, 0, RADIUS);
-        mWorldObjects.add(new WallObject(RADIUS * 2, getHeight() / 2, getWidth() - RADIUS * 2, getHeight() / 2,
-                WALL_WIDTH));
-        mWorldObjects.add(new GoalObject(RADIUS, RADIUS, RADIUS));
-        mWorldObjects.add(new HoleObject(getWidth() - RADIUS, RADIUS, RADIUS));
+        canvasWidth = getWidth();
+        canvasHeight = getHeight();
+        wallWidth = 8;
+        int radius = canvasWidth / 30;
+        int maxVelocity = radius * 2;
+        int distanceBetweenWalls = maxVelocity * 2;
+        int width = (canvasWidth / distanceBetweenWalls) * distanceBetweenWalls;
+        int height = (canvasHeight / distanceBetweenWalls) * distanceBetweenWalls;
+        int xPadding = (canvasWidth - width) / 2;
+        int yPadding = (canvasHeight - height) / 2;
+
+        mMarble = new Marble(canvasWidth - xPadding - distanceBetweenWalls / 2,
+                canvasHeight - yPadding - distanceBetweenWalls / 2, mGX, mGY, radius, maxVelocity);
+        for (int i = xPadding; i < canvasWidth; i += distanceBetweenWalls) {
+            mWorldObjects.add(new WallObject(i, yPadding,
+                    i, canvasHeight - yPadding, wallWidth));
+        }
+        for (int i = yPadding; i < canvasHeight; i += distanceBetweenWalls) {
+            mWorldObjects.add(new WallObject(xPadding, i,
+                    canvasWidth - xPadding, i, wallWidth));
+        }
+        mWorldObjects.add(new GoalObject(xPadding + distanceBetweenWalls / 2,
+                yPadding + distanceBetweenWalls / 2, radius));
+        mWorldObjects.add(new HoleObject(canvasWidth - xPadding - distanceBetweenWalls / 2,
+                yPadding + distanceBetweenWalls / 2, radius));
+        setPaint();
     }
 
     /**
@@ -149,8 +166,8 @@ public class MarbleView extends View {
      * @param gY Gravity in y plane.
      */
     public void setGravity(double gX, double gY) {
-        mGX = gX;
-        mGY = gY;
+        mGX = Math.min(gX, 9.8);
+        mGY = Math.min(gY, 9.8);
     }
 
     /**
@@ -160,9 +177,9 @@ public class MarbleView extends View {
      */
     public void update(double dT) {
         if (mMarble != null) {
-            HitType hit = mMarble.move(dT, mGX, mGY, getWidth(), getHeight(), mWorldObjects);
+            HitType hit = mMarble.move(dT, mGX, mGY, canvasWidth, canvasHeight, mWorldObjects);
             switch (hit) {
-                case TARGET:
+                case GOAL:
                     success();
                     break;
                 case HOLE:

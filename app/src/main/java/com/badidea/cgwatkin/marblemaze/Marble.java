@@ -11,10 +11,11 @@ import java.util.ArrayList;
  * The main object in the world, which the user controls.
  */
 class Marble {
+
     /**
      * The marble's position, radius and velocity values.
      */
-    private double mX, mY, mR, mVX, mVY;
+    private double mX, mY, mR, mVX, mVY, mMaxVelocity;
 
     /**
      * Velocity modifier on collision.
@@ -29,13 +30,15 @@ class Marble {
      * @param vX Velocity in x plane.
      * @param vY Velocity in y plane.
      * @param r Radius.
+     * @param maxVelocity Maximum velocity in any plane.
      */
-    Marble(int x, int y, double vX, double vY, double r) {
+    Marble(int x, int y, double vX, double vY, double r, double maxVelocity) {
         mX = x;
         mY = y;
         mR = r;
         mVX = vX;
         mVY = vY;
+        mMaxVelocity = maxVelocity;
     }
 
     /**
@@ -71,7 +74,7 @@ class Marble {
                 if (wo.collision(x, y, mR, mVX, mVY)) {
                     if (wo.isGoal()) {
                         updatePosition(x, y);
-                        return HitType.TARGET;
+                        return HitType.GOAL;
                     } else if (wo.isHole()) {
                         updatePosition(x, y);
                         return HitType.HOLE;
@@ -144,7 +147,7 @@ class Marble {
      * @return The new coordinate.
      */
     private double linearMovement(double coordinate, double v, double dT) {
-        return coordinate + (v * dT * 100);
+        return coordinate + Math.min((v * dT * 100), mMaxVelocity);
     }
 
     /**
@@ -178,6 +181,6 @@ enum HitType {
     NONE,
     BOUNDARY,
     WALL,
-    TARGET,
+    GOAL,
     HOLE
 }
