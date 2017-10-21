@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -104,7 +105,7 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
             public ArrayList<WorldObject> createWorldObjects(int canvasWidth, int canvasHeight, int wallWidth,
                                                              int radius, int distanceBetweenWalls, int xPadding,
                                                              int yPadding) {
-                return doCreateWorldObjects(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
+                return MarbleMazeActivity.this.createWorldObjects(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
                         xPadding, yPadding);
             }
         });
@@ -224,18 +225,21 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
      * @param yPadding Padding around board in y plane.
      * @return An array list of world objects.
      */
-    private ArrayList<WorldObject> doCreateWorldObjects(int canvasWidth, int canvasHeight, int wallWidth, int radius,
-                                                        int distanceBetweenWalls, int xPadding, int yPadding) {
+    private ArrayList<WorldObject> createWorldObjects(int canvasWidth, int canvasHeight, int wallWidth, int radius,
+                                                      int distanceBetweenWalls, int xPadding, int yPadding) {
+        Log.d("WORLD_NUMBER", String.valueOf(worldNumber));
         switch (worldNumber) {
             case 1:
-                return World1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
+                return createWorld1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
+            case 2:
+                return createWorld2(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
             default:
-                return World1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
+                return createWorld1(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls, xPadding, yPadding);
         }
     }
 
     /**
-     *
+     * Creates world objects for world 1.
      *
      * @param canvasWidth Width of canvas.
      * @param canvasHeight Height of canvas.
@@ -246,19 +250,59 @@ public class MarbleMazeActivity extends Activity implements SensorEventListener 
      * @param yPadding Padding around board in y plane.
      * @return An array list of world objects.
      */
-    private ArrayList<WorldObject> World1(int canvasWidth, int canvasHeight, int wallWidth, int radius,
-                                          int distanceBetweenWalls, int xPadding, int yPadding) {
+    private ArrayList<WorldObject> createWorld1(int canvasWidth, int canvasHeight, int wallWidth, int radius,
+                                                int distanceBetweenWalls, int xPadding, int yPadding) {
+        return new ArrayList<>();
+    }
+
+    /**
+     * Creates world objects for world 2.
+     *
+     * @param canvasWidth Width of canvas.
+     * @param canvasHeight Height of canvas.
+     * @param wallWidth Width of walls.
+     * @param radius Radius of marble.
+     * @param distanceBetweenWalls Minimum distance between walls.
+     * @param xPadding Padding around board in x plane.
+     * @param yPadding Padding around board in y plane.
+     * @return An array list of world objects.
+     */
+    private ArrayList<WorldObject> createWorld2(int canvasWidth, int canvasHeight, int wallWidth, int radius,
+                                                int distanceBetweenWalls, int xPadding, int yPadding) {
         ArrayList<WorldObject> worldObjects = new ArrayList<>();
-        for (int i = xPadding; i < canvasWidth; i += distanceBetweenWalls) {
-            worldObjects.add(new WallObject(i, yPadding, i, canvasHeight - yPadding, wallWidth));
-        }
-        for (int i = yPadding; i < canvasHeight; i += distanceBetweenWalls) {
-            worldObjects.add(new WallObject(xPadding, i, canvasWidth - xPadding, i, wallWidth));
-        }
-        worldObjects.add(new GoalObject(xPadding + distanceBetweenWalls / 2,
-                yPadding + distanceBetweenWalls / 2, radius));
-        worldObjects.add(new HoleObject(canvasWidth - xPadding - distanceBetweenWalls / 2,
-                yPadding + distanceBetweenWalls / 2, radius));
+
+
+        // Walls for square in centre (l, t, r, b)
+        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls * 2, canvasHeight / 2 - yPadding / 2,
+                xPadding + distanceBetweenWalls * 2, canvasHeight / 2 + yPadding / 2, wallWidth));
+
+        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls * 2, canvasHeight / 2 - yPadding / 2,
+                canvasWidth - xPadding - distanceBetweenWalls * 2, canvasHeight / 2 - yPadding / 2, wallWidth));
+
+        worldObjects.add(new WallObject(canvasWidth - xPadding - distanceBetweenWalls * 2,
+                canvasHeight / 2 - yPadding / 2, canvasWidth - xPadding - distanceBetweenWalls * 2,
+                canvasHeight / 2 + yPadding / 2, wallWidth));
+
+        worldObjects.add(new WallObject(xPadding + distanceBetweenWalls * 2, canvasHeight / 2 + yPadding / 2,
+                canvasWidth - xPadding - distanceBetweenWalls * 2, canvasHeight / 2 + yPadding / 2, wallWidth));
+
+
         return worldObjects;
     }
+
+//    private ArrayList<WorldObject> WorldTest(int canvasWidth, int canvasHeight, int wallWidth, int radius,
+//                                          int distanceBetweenWalls, int xPadding, int yPadding) {
+//        ArrayList<WorldObject> worldObjects = new ArrayList<>();
+//        for (int i = xPadding; i < canvasWidth; i += distanceBetweenWalls) {
+//            worldObjects.add(new WallObject(i, yPadding, i, canvasHeight - yPadding, wallWidth));
+//        }
+//        for (int i = yPadding; i < canvasHeight; i += distanceBetweenWalls) {
+//            worldObjects.add(new WallObject(xPadding, i, canvasWidth - xPadding, i, wallWidth));
+//        }
+//        worldObjects.add(new GoalObject(xPadding + distanceBetweenWalls / 2,
+//                yPadding + distanceBetweenWalls / 2, radius));
+//        worldObjects.add(new HoleObject(canvasWidth - xPadding - distanceBetweenWalls / 2,
+//                yPadding + distanceBetweenWalls / 2, radius));
+//        return worldObjects;
+//    }
 }

@@ -56,7 +56,7 @@ public class WorldPickerGridView extends GridView {
     private void startWorld(int position) {
         Context c = getContext();
         Intent intent = new Intent(c, MarbleMazeActivity.class);
-        intent.putExtra("WORLD_NUMBER", mWorldList.get(position));
+        intent.putExtra("WORLD_NUMBER", position + 1);
         c.startActivity(intent);
     }
 
@@ -65,5 +65,6 @@ public class WorldPickerGridView extends GridView {
      */
     private void getWorlds() {
         mWorldList.add(R.string.world1);
+        mWorldList.add(R.string.world2);
     }
 }

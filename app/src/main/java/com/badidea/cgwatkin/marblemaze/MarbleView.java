@@ -108,15 +108,32 @@ public class MarbleView extends View {
         int radius = canvasWidth / 30;
         int maxVelocity = radius * 2;
         int distanceBetweenWalls = maxVelocity * 2;
-        int width = (canvasWidth / distanceBetweenWalls) * distanceBetweenWalls;
-        int height = (canvasHeight / distanceBetweenWalls) * distanceBetweenWalls;
+        int width = 6 * distanceBetweenWalls;
+        int height = 12 * distanceBetweenWalls;
         int xPadding = (canvasWidth - width) / 2;
         int yPadding = (canvasHeight - height) / 2;
+        mWorldObjects = new ArrayList<>();
 
+        // Marble
         mMarble = new Marble(canvasWidth - xPadding - distanceBetweenWalls / 2,
                 canvasHeight - yPadding - distanceBetweenWalls / 2, mGX, mGY, radius, maxVelocity);
-        mWorldObjects = mObserver.createWorldObjects(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
-                xPadding, yPadding);
+
+        // Goal
+        mWorldObjects.add(new GoalObject(xPadding + distanceBetweenWalls / 2,
+                yPadding + distanceBetweenWalls / 2, radius));
+
+        // Edges (left, top, right, bottom)
+        mWorldObjects.add(new WallObject(xPadding, yPadding, xPadding, canvasHeight - yPadding, wallWidth));
+        mWorldObjects.add(new WallObject(xPadding, yPadding, canvasWidth - xPadding, yPadding, wallWidth));
+        mWorldObjects.add(new WallObject(canvasWidth - xPadding, yPadding, canvasWidth - xPadding,
+                canvasHeight - yPadding, wallWidth));
+        mWorldObjects.add(new WallObject(xPadding, canvasHeight - yPadding, canvasWidth - xPadding,
+                canvasHeight - yPadding, wallWidth));
+
+        // Get world specific objects
+        mWorldObjects.addAll(mObserver.createWorldObjects(canvasWidth, canvasHeight, wallWidth, radius, distanceBetweenWalls,
+                xPadding, yPadding));
+
         setPaint();
     }
 
